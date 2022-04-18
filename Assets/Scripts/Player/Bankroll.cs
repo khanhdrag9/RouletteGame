@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Player
+namespace Game
 {
     public class Bankroll
     {
         private List<Currency> currencies;
 
-        public int Count => currencies.Count;
+        public int CurrencyCount => currencies.Count;
 
         public Bankroll()
         {

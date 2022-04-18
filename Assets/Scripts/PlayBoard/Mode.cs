@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.PlayBoard
+namespace Game
 {
     public class Mode : MonoBehaviour
     {

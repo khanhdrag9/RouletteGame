@@ -1,8 +1,11 @@
 namespace Game
 {
-    public enum BetType
+    public enum WagerType
     {
-        SingleBet
+        Single,
+        Range,
+        Odd,
+        Even
     }
 
 

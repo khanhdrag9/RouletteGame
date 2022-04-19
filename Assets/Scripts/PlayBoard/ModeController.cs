@@ -42,7 +42,7 @@ namespace Game
             }
         }
 
-        public void Initalize(ModeData modeData)
+        public void Initalize(BoardData modeData)
         {
             InitializeNumberSpinner(modeData.Numbers);
             InitalizeBetOptions(modeData.AvailableBet);

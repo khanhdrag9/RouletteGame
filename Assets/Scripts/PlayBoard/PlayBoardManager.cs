@@ -29,6 +29,7 @@ namespace Game
         [Header("General")]
         [SerializeField] private Player player;
         [SerializeField] private ModeController modeController;
+        [SerializeField] private BoardLayout boardLayout;
         [SerializeField] private List<BoardStateData> stateDatas;
 
         [Header("GUI")]
@@ -73,15 +74,17 @@ namespace Game
             }
         }
 
-        private ModeData GetModeData()
+        private BoardData GetBoardData()
         {
-            ModeData dataResult = null;
+            BoardData dataResult = null;
 
             // Can handle getting data from server
 
             // Test Data;
-            dataResult = new ModeData
+            dataResult = new BoardData
             {
+                
+
                 Numbers = new int[]
                 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19},
 
@@ -121,7 +124,9 @@ namespace Game
 
         void Start()
         {
-            modeController.Initalize(GetModeData());
+            BoardData boardData = GetBoardData();
+            modeController.Initalize(boardData);
+
             modeController.Player = player;
             BoardState = BoardState.Betting;
         }

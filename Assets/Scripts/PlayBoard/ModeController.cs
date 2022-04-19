@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Game.Bet;
+using UnityEngine.Events;
+
 namespace Game
 {
-    public class Mode : MonoBehaviour
+    public class ModeController : MonoBehaviour
     {
         [Header("Spinner")]
         [SerializeField] private RectTransform spinnerElementGroup;
@@ -14,11 +16,47 @@ namespace Game
         [Header("Bet Option")]
         [SerializeField] private RectTransform betOptionGroup;
         [SerializeField] private GameObject betOptionPrefab;
+        [SerializeField] private InputField betAmountInput;
+
+
+        private List<BetOptionGUI> betOptionGUIs = new List<BetOptionGUI>();
+        private List<BetBase> bets = new List<BetBase>();
+        private int betAmount
+        {
+            get 
+            {
+                if(int.TryParse(betAmountInput.text, out int amount))
+                    return amount;
+                
+                return -1;
+            }
+        }
+
+        public void SetBetable(bool active)
+        {
+            foreach(var e in betOptionGUIs)
+            {
+                e.Active(active);
+            }
+        }
 
         public void Initalize(ModeData modeData)
         {
             InitializeNumberSpinner(modeData.Numbers);
             InitalizeBetOptions(modeData.AvailableBet);
+        }
+
+        public void CheckRewardOfPlayer(Player player)
+        {
+            foreach(var bet in bets)
+            {
+                if(bet.IsRewardAble())
+                {
+                    bet.Reward(player);
+                }
+            }
+
+            bets.Clear();
         }
 
         private void InitializeNumberSpinner(int[] orderOfNumer)
@@ -44,29 +82,61 @@ namespace Game
 
         private void InitalizeBetOptions(BetData[] betDatas)
         {
+            betOptionGUIs = new List<BetOptionGUI>();
             for(int i = 0; i < betDatas.Length; i++)
             {
                 BetData betData = betDatas[i];
 
                 GameObject betOption = SpawnBetOption();
                 BetOptionGUI betOptionGUI = betOption.GetComponent<BetOptionGUI>();
-                
-                betOptionGUI.BetBtn.onClick.AddListener(()=>
-                {
-                    // Handle Creating a bet
-                    IBetCreator creator = null;
-                    string defineName = betData.Name.ToLower();
-                    switch(defineName)
-                    {
-                        case "singlebet":
-                            creator = new SingleBetCreator(betOptionGUI.BetAmount);
-                            break;
-                    }
-                });
 
+                HandleBetOption(betOptionGUI, betData);
                 betOptionGUI.TextVisual.text = betData.Visual;
+
+                betOptionGUIs.Add(betOptionGUI);
             }
         }
+
+        private void HandleBetOption(BetOptionGUI betOptionGUI, BetData betData)
+        {
+            string defineName = betData.Name.ToLower();
+
+            // Setup GUI
+            switch(defineName)
+            {
+                case "singlebet":
+                    betOptionGUI.BetInput.gameObject.SetActive(true);
+                    break;
+            }
+
+            // Setup handler betting
+            betOptionGUI.BetBtn.onClick.AddListener(()=>
+            {
+                IBetCreator creator = null;
+                switch(defineName)
+                {
+                    case "singlebet":
+                        int BetNumber = betOptionGUI.BetNumber;
+
+                        // Player has not picked number
+                        if(BetNumber < 0) 
+                        {
+                            break;
+                        }
+
+                        creator = new SingleBetCreator(BetNumber);
+                        break;
+                }
+
+                if(creator != null)
+                {
+                    BetBase bet = creator.GetBet(betAmount);
+                    bets.Add(bet);
+                }
+            });
+        }
+
+
 
         private GameObject SpawnElementInSpinner()
         {

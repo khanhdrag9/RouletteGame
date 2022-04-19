@@ -3,33 +3,80 @@ using System.Collections.Generic;
 using Game.Bet;
 using UnityEngine;
 using UnityEngine.UI;
+using Game.Helper;
 
 namespace Game
 {
+    public enum BoardState
+    {
+        None,
+        Betting,
+        Spinning
+    }
+
     public class PlayBoardManager : MonoBehaviour
     {
+        [System.Serializable]
+        public class BoardStateData
+        {
+            public BoardState State;
+            public BoardStateBase Component;
+        }
+
         public static PlayBoardManager Instance {get; private set;}
 
 
         [Header("General")]
         [SerializeField] private Player player;
-        [SerializeField] private Mode mode;
+        [SerializeField] private ModeController modeController;
+        [SerializeField] private List<BoardStateData> stateDatas;
 
         [Header("GUI")]
-        [SerializeField] private Button spinButton;
         [SerializeField] private Text playerCurrency;
 
         [Header("Debug")]
         [SerializeField] private int debugSpinResult = 0;
 
-        private List<IBet> bets;
+        private BoardState boardState = BoardState.None;
 
         public int Result {get; private set;} = -1;
-        
+        public Player Player => player;
+        public ModeController ModeController => modeController;
+        public BoardState BoardState
+        {
+            get => boardState;
+            set
+            {
+                if(value == BoardState.None)
+                {
+                    foreach(var state in stateDatas)
+                        state.Component.enabled = false;
+                }
+                else
+                {
+                    if(boardState == value) return;
+
+                    foreach(var state in stateDatas)
+                    {
+                        // Current state
+                        if(state.State == boardState)   
+                            state.Component.enabled = false;
+                        
+                        // New State
+                        if(state.State == value)    
+                            state.Component.enabled = true;
+                    }
+                }
+
+                boardState = value;
+            }
+        }
 
         private ModeData GetModeData()
         {
             ModeData dataResult = null;
+
+            // Can handle getting data from server
 
             // Test Data;
             dataResult = new ModeData
@@ -51,46 +98,18 @@ namespace Game
             return dataResult;
         } 
 
-        private void Spin()
-        {
-            // Test
-            bets.Add(new SingleBet(0, 100));
-
-            StartCoroutine(WaitSpinning());
-        }
-
-        private IEnumerator WaitSpinning()
-        {
-            Result = debugSpinResult;
-            yield return new WaitForSeconds(3f);
-
-            CheckRewardOfPlayer();
-        }
-
-        private void CheckRewardOfPlayer()
-        {
-            foreach(var bet in bets)
-            {
-                if(bet.IsRewardAble())
-                {
-                    bet.Reward(player);
-                }
-            }
-
-            bets.Clear();
-        }
 
 #region Unity methods
         void Awake()
         {
             Instance = this;
-            bets = new List<IBet>();
+            BoardState = BoardState.None;
         }
 
         void Start()
         {
-            mode.Initalize(GetModeData());
-            spinButton.onClick.AddListener(Spin);
+            modeController.Initalize(GetModeData());
+            BoardState = BoardState.Betting;
         }
 
         void Update()

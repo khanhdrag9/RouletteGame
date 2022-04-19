@@ -10,6 +10,6 @@ namespace Game.Bet
         /// Create a bet
         /// <param name="betAmount">bet amount of player</param>
         /// </summary>
-        IBet GetBet(int betAmount);
+        BetBase GetBet(int betAmount);
     }
 }

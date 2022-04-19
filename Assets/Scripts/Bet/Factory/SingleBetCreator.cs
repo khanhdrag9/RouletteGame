@@ -9,7 +9,7 @@ namespace Game.Bet
             this.betNumber = betNumber;
         }
 
-        public IBet GetBet(int betAmount)
+        public BetBase GetBet(int betAmount)
         {
             return new SingleBet(betNumber, betAmount);
         }

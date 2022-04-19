@@ -15,15 +15,21 @@ namespace Game
         public Text TextVisual => textVisual;
         public InputField BetInput => betInput;
 
-        public int BetAmount
+        public int BetNumber
         {
             get 
             {
                 if(int.TryParse(betInput.text, out int amount))
                     return amount;
                 
-                return 0;
+                return -1;
             }
+        }
+
+        public void Active(bool active)
+        {
+            betBtn.interactable = active;
+            betInput.interactable = active;
         }
     }
 }

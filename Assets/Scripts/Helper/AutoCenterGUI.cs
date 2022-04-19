@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoCenterGUI : MonoBehaviour
+namespace Game.Helper
 {
-    // Start is called before the first frame update
-    void Start()
+    public class AutoCenterGUI : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Awake()
+        {
+            GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        }
     }
 }

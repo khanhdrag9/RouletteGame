@@ -1,26 +1,23 @@
 namespace Game.Bet
 {
-    public class SingleBet : IBet
+    public class SingleBet : BetBase
     {
         int betNumber;
-        public int Currencies {get; private set;}
 
-        public SingleBet(int betNumber, int currencies)
+        public SingleBet(int betNumber, int betAmount) : base(betAmount)
         {
             this.betNumber = betNumber;
-            this.Currencies = currencies;
         }
 
-        public bool IsRewardAble()
+        public override bool IsRewardAble()
         {
             return PlayBoardManager.Instance.Result == betNumber;
         }
 
-        public void Reward(Player player)
+        public override void Reward(Player player)
         {
-            int reward = (int)(Currencies * 1.9f);
+            int reward = (int)(BetAmount * 1.9f);
             player.Bankroll.Receive(reward);
         }
-
     }
 }

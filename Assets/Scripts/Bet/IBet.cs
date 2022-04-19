@@ -1,5 +1,8 @@
-namespace Game
+namespace Game.Bet
 {
+    /// <summary>
+    /// All Bet class should implement this interface
+    /// </summary>
     public interface IBet
     {
         int Currencies {get;}

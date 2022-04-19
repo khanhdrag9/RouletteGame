@@ -1,4 +1,4 @@
-namespace Game
+namespace Game.Bet
 {
     public class SingleBet : IBet
     {

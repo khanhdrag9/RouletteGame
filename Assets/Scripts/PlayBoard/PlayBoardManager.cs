@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Bet;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,10 +29,23 @@ namespace Game
 
         private ModeData GetModeData()
         {
-            ModeData dataResult = new ModeData
+            ModeData dataResult = null;
+
+            // Test Data;
+            dataResult = new ModeData
             {
-                numbers = new int[]
-                {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
+                Numbers = new int[]
+                {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19},
+
+                AvailableBet = new BetData[]
+                {
+                    new BetData
+                    {
+                        Name = "singlebet",
+                        Visual = "Single Bet",
+                        BonusRate = 1.8f
+                    }
+                }
             };
 
             return dataResult;
@@ -75,7 +89,7 @@ namespace Game
 
         void Start()
         {
-            mode.InitalizeBoard(GetModeData());
+            mode.Initalize(GetModeData());
             spinButton.onClick.AddListener(Spin);
         }
 

@@ -14,14 +14,26 @@ namespace Game.Bet
         /// bet amount that player placed
         /// </summary>
         public int BetAmount {get; set;}
+        
+        /// <summary>
+        /// BonusRate x BetAmount = reward of player
+        /// </summary>
+        public float BonusRate {get; set;}
 
-        protected BetBase(int currency)
+        protected int reward;
+
+        protected BetBase(int betAmount, float bonusRate)
         {
             Id = System.Guid.NewGuid().ToString("N");
-            BetAmount = currency;
+            this.BetAmount = betAmount;
+            this.BonusRate = bonusRate;
         }
         
         public abstract bool IsRewardAble();
-        public abstract void Reward(Player player);
+        public virtual void Reward(Player player)
+        {
+            reward = (int)(BetAmount * BonusRate);
+            player.Bankroll.Receive(reward);
+        }
     }
 }

@@ -104,18 +104,21 @@ namespace Game
             // Setup GUI
             switch(defineName)
             {
-                case "singlebet":
+                case Constants.BetSingleNumber:
                     betOptionGUI.BetInput.gameObject.SetActive(true);
+                    break;
+                default:
+                    betOptionGUI.BetInput.gameObject.SetActive(false);
                     break;
             }
 
             // Setup handler betting
             betOptionGUI.BetBtn.onClick.AddListener(()=>
             {
-                IBetCreator creator = null;
+                BetBase bet = null;
                 switch(defineName)
                 {
-                    case "singlebet":
+                    case Constants.BetSingleNumber:
                         int BetNumber = betOptionGUI.BetNumber;
 
                         // Player has not picked number
@@ -124,19 +127,23 @@ namespace Game
                             break;
                         }
 
-                        creator = new SingleBetCreator(BetNumber);
+                        bet = new SingleNumberBet(betAmount, betData.BonusRate, BetNumber);
+                        
+                        break;
+                    case Constants.BetEvenNumber:
+                        bet = new EvenNumberBet(betAmount, betData.BonusRate);
+                        break;
+                    case Constants.BetOddNumber:
+                        bet = new OddNumberBet(betAmount, betData.BonusRate);
                         break;
                 }
 
-                if(creator != null)
+                if(bet != null)
                 {
-                    BetBase bet = creator.GetBet(betAmount);
                     bets.Add(bet);
                 }
             });
         }
-
-
 
         private GameObject SpawnElementInSpinner()
         {

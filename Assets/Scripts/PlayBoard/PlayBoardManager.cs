@@ -88,9 +88,21 @@ namespace Game
                 {
                     new BetData
                     {
-                        Name = "singlebet",
-                        Visual = "Single Bet",
+                        Name = "single",
+                        Visual = "Single Number",
                         BonusRate = 1.8f
+                    },
+                    new BetData
+                    {
+                        Name = "odd",
+                        Visual = "Odd Number",
+                        BonusRate = 1.4f
+                    },
+                    new BetData
+                    {
+                        Name = "even",
+                        Visual = "Even Number",
+                        BonusRate = 1.4f
                     }
                 }
             };

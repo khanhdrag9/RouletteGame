@@ -20,7 +20,7 @@ namespace Game
 
 
         private List<BetOptionGUI> betOptionGUIs = new List<BetOptionGUI>();
-        private List<BetBase> bets = new List<BetBase>();
+        private List<WagerBase> bets = new List<WagerBase>();
         private int betAmount
         {
             get 
@@ -123,7 +123,7 @@ namespace Game
                     return;
                 }
 
-                BetBase bet = null;
+                WagerBase bet = null;
                 switch(defineName)
                 {
                     case Constants.BetSingleNumber:
@@ -135,14 +135,14 @@ namespace Game
                             break;
                         }
 
-                        bet = new SingleNumberBet(betAmount, betData.BonusRate, BetNumber);
+                        bet = new SingleNumberWager(betAmount, betData.BonusRate, BetNumber);
                         
                         break;
                     case Constants.BetEvenNumber:
-                        bet = new EvenNumberBet(betAmount, betData.BonusRate);
+                        bet = new EvenNumberWager(betAmount, betData.BonusRate);
                         break;
                     case Constants.BetOddNumber:
-                        bet = new OddNumberBet(betAmount, betData.BonusRate);
+                        bet = new OddNumberWager(betAmount, betData.BonusRate);
                         break;
                 }
 

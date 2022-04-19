@@ -1,4 +1,4 @@
-namespace Game.Bet
+namespace Game
 { 
     [System.Serializable]
     public class BetData

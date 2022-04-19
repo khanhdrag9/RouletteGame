@@ -1,9 +1,9 @@
-namespace Game.Bet
+namespace Game
 {
     /// <summary>
     /// All Bet class should implement this abstract
     /// </summary>
-    public abstract class BetBase
+    public abstract class WagerBase
     {
         /// <summary>
         /// an unique id
@@ -20,9 +20,11 @@ namespace Game.Bet
         /// </summary>
         public float BonusRate {get; set;}
 
+        public abstract WagerType WagerType {get;}
+
         protected int reward;
 
-        protected BetBase(int betAmount, float bonusRate)
+        protected WagerBase(int betAmount, float bonusRate)
         {
             Id = System.Guid.NewGuid().ToString("N");
             this.BetAmount = betAmount;

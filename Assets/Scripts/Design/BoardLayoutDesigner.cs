@@ -31,10 +31,34 @@ namespace Design
                 var image = guiObject.GetComponent<Image>();
                 var text = guiObject.GetComponentInChildren<Text>();
 
+                // Convert GUIObjectType to WagerType if guiObject is a wager UI
+                string defineName = guiObject.Type.ToString();
+                switch(guiObject.Type)
+                {
+                    case GUIObjectType.SingleWager:
+                        defineName = WagerType.Single.ToString();
+                        break;
+                    case GUIObjectType.RangeWager:
+                        defineName = WagerType.Range.ToString();
+                        break;
+                    case GUIObjectType.OddWager:
+                        defineName = WagerType.Odd.ToString();
+                        break;
+                    case GUIObjectType.EvenWager:
+                        defineName = WagerType.Even.ToString();
+                        break;
+                    case GUIObjectType.ColorWager:
+                        defineName = WagerType.Color.ToString();
+                        break;
+                }
+
                 // express logic in string
                 string logic = "";
                 switch(guiObject.Type)
                 {
+                    case GUIObjectType.SingleWager:
+                        logic = text.text;
+                        break;
                     case GUIObjectType.RangeWager:
                         var range = guiObject as RangeWagerGUI;
                         logic = $"{range.From}-{range.To}";
@@ -47,7 +71,7 @@ namespace Design
 
                 boxes[i] = new WagerBox
                 {
-                    Name = guiObject.Type.ToString(),
+                    Name = defineName,
                     Position = transform.position,
                     Size = transform.sizeDelta,
                     Color = Extensions.ColorToString(image.color),
@@ -92,9 +116,6 @@ namespace Design
                 transform.sizeDelta = data.Size;
                 box.GetComponent<Image>().color = Extensions.StringToColor(data.Color);
                 box.GetComponentInChildren<Text>().text = data.VisualText;
-
-                var guiObject = box.GetComponent<GUIObject>();
-                guiObject.Type = Extensions.StringToEnum<GUIObjectType>(data.Name);
             }
         }
 

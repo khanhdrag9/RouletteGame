@@ -8,16 +8,8 @@ namespace Game
 {
     public class NumberOnBetBoardGUI : MonoBehaviour
     {
-        [SerializeField] private Image background;
-        [SerializeField] private Button button;
-        [SerializeField] private Text numberTxt;
-
-        public void Initialize(int number, Color color, UnityAction clickCallback)
-        {
-            numberTxt.text = number.ToString();
-            background.color = color;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(clickCallback);
-        }
+        [SerializeField] public Image Background;
+        [SerializeField] public Button Button;
+        [SerializeField] public Text Text;
     }
 }

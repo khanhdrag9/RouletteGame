@@ -135,9 +135,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033e219cd72183046bb568b71ea45413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background: {fileID: 8179512778039551160}
-  button: {fileID: 5455144107013237045}
-  numberTxt: {fileID: 8179512778048310024}
+  Background: {fileID: 8179512778039551160}
+  Button: {fileID: 5455144107013237045}
+  Text: {fileID: 8179512778048310024}
 --- !u!1 &8179512778039551110
 GameObject:
   m_ObjectHideFlags: 0

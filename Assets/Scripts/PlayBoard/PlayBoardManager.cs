@@ -29,7 +29,7 @@ namespace Game
         [Header("General")]
         [SerializeField] private Player player;
         [SerializeField] private ModeController modeController;
-        [SerializeField] private BoardLayout boardLayout;
+        [SerializeField] private PlayBoardController playBoardController;
         [SerializeField] private List<BoardStateData> stateDatas;
 
         [Header("GUI")]

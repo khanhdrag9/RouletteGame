@@ -5,7 +5,8 @@ namespace Game
         Single,
         Range,
         Odd,
-        Even
+        Even,
+        Color
     }
 
 

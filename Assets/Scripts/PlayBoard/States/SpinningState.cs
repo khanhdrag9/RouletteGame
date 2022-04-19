@@ -8,7 +8,6 @@ namespace Game
 {
     public class SpinningState : BoardStateBase
     {
-        private Player player => playBoardManager.Player;
         private ModeController modeController => playBoardManager.ModeController;
 
         Coroutine spinningCoroutine;
@@ -16,7 +15,7 @@ namespace Game
         {
             yield return new WaitForSeconds(3f);
 
-            modeController.CheckRewardOfPlayer(player);
+            modeController.CheckRewardOfPlayer();
             playBoardManager.BoardState = BoardState.Betting;
         }
 

@@ -6,11 +6,29 @@ namespace Game
 {
     public class Player : MonoBehaviour
     {
-        public Bankroll Bankroll {get; private set;}
+        private Bankroll bankroll;
+
+        public int CurrencyCount => bankroll.CurrencyCount;
+
+        public bool Bet(int betAmount)
+        {
+            if(bankroll.CurrencyCount >= betAmount)
+            {
+                bankroll.Spend(betAmount);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Reward(int reward)
+        {
+            bankroll.Receive(reward);
+        }
 
         private void Awake()
         {
-            Bankroll = new Bankroll();
+            bankroll = new Bankroll();
         }
     }
 }

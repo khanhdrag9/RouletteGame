@@ -39,7 +39,8 @@ namespace Game
 
         private BoardState boardState = BoardState.None;
 
-        public int Result {get; private set;} = -1;
+        // public int Result {get; private set;} = -1;
+        public int Result => debugSpinResult;
         public Player Player => player;
         public ModeController ModeController => modeController;
         public BoardState BoardState
@@ -121,12 +122,13 @@ namespace Game
         void Start()
         {
             modeController.Initalize(GetModeData());
+            modeController.Player = player;
             BoardState = BoardState.Betting;
         }
 
         void Update()
         {
-            playerCurrency.text = player.Bankroll.CurrencyCount.ToString();
+            playerCurrency.text = player.CurrencyCount.ToString();
         }
 #endregion
 

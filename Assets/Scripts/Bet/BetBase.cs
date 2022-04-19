@@ -33,7 +33,7 @@ namespace Game.Bet
         public virtual void Reward(Player player)
         {
             reward = (int)(BetAmount * BonusRate);
-            player.Bankroll.Receive(reward);
+            player.Reward(reward);
         }
     }
 }

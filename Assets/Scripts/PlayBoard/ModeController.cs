@@ -32,6 +32,8 @@ namespace Game
             }
         }
 
+        public Player Player {get; set;}
+
         public void SetBetable(bool active)
         {
             foreach(var e in betOptionGUIs)
@@ -46,13 +48,13 @@ namespace Game
             InitalizeBetOptions(modeData.AvailableBet);
         }
 
-        public void CheckRewardOfPlayer(Player player)
+        public void CheckRewardOfPlayer()
         {
             foreach(var bet in bets)
             {
                 if(bet.IsRewardAble())
                 {
-                    bet.Reward(player);
+                    bet.Reward(Player);
                 }
             }
 
@@ -115,6 +117,12 @@ namespace Game
             // Setup handler betting
             betOptionGUI.BetBtn.onClick.AddListener(()=>
             {
+                // Is player enough money?
+                if(!Player.Bet(betAmount))
+                {
+                    return;
+                }
+
                 BetBase bet = null;
                 switch(defineName)
                 {

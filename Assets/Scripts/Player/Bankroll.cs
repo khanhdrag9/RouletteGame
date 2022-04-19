@@ -13,6 +13,9 @@ namespace Game
         public Bankroll()
         {
             currencies = new List<Currency>();
+            
+            // Test
+            Receive(1000);
         }
 
         public void Spend(int number)

@@ -86,10 +86,9 @@ namespace Design
                 Vector3 position = rectTrans.anchoredPosition;
 
                 // Revert
-                // rectTrans.SetParent(cacheParent);
-                // rectTrans.anchorMin = cacheAnchorMin;
-                // rectTrans.anchorMax = cacheAnchorMax;
-                
+                rectTrans.SetParent(cacheParent);
+                rectTrans.anchorMin = cacheAnchorMin;
+                rectTrans.anchorMax = cacheAnchorMax;
 
                 boxes[i] = new WagerBox
                 {

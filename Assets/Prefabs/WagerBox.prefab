@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Background: {fileID: 8179512778039551160}
-  Button: {fileID: 5455144107013237045}
+  Button: {fileID: 3763148834064375414}
   Text: {fileID: 8179512778048310024}
 --- !u!1 &8179512778039551110
 GameObject:
@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 8179512778039551161}
   - component: {fileID: 8179512778039551160}
   - component: {fileID: 5455144107013237045}
+  - component: {fileID: 3763148834064375414}
   m_Layer: 5
   m_Name: '[Button] Background'
   m_TagString: Untagged
@@ -258,6 +259,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3763148834064375414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179512778039551110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773e8e0589b5c794b98823e83c41ab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8179512778048310038
 GameObject:
   m_ObjectHideFlags: 0

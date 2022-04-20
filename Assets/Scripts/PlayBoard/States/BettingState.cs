@@ -33,8 +33,8 @@ namespace Game
 
         private void OnDisable() 
         {
-            spinButton.gameObject.SetActive(false);
-            modeController.SetBetable(false);
+            if(spinButton) spinButton.gameObject.SetActive(false);
+            if(modeController) modeController.SetBetable(false);
         }
 
 #endregion

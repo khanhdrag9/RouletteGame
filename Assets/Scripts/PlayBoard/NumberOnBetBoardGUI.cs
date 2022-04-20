@@ -9,7 +9,9 @@ namespace Game
     public class NumberOnBetBoardGUI : MonoBehaviour
     {
         [SerializeField] public Image Background;
-        [SerializeField] public Button Button;
+        [SerializeField] public ButtonExtension Button;
         [SerializeField] public Text Text;
+
+        
     }
 }

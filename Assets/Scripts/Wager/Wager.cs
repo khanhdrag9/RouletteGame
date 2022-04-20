@@ -13,7 +13,11 @@ namespace Game
         /// <summary>
         /// bet amount that player placed
         /// </summary>
-        public int BetAmount {get; set;}
+        public int BetAmount
+        {
+            get => betAmnout;
+            set => betAmnout = value >= 0 ? value : 0;
+        }
         
         /// <summary>
         /// BonusRate x BetAmount = reward of player
@@ -23,6 +27,8 @@ namespace Game
         public abstract WagerType WagerType {get;}
 
         protected int reward;
+
+        private int betAmnout; 
 
         protected Wager(int betAmount, float bonusRate)
         {

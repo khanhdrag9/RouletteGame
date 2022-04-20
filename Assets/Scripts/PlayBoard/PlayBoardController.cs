@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using Game.Asset;
-using Game.Bet;
 using Game.Helper;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace Game
 {
@@ -14,12 +12,14 @@ namespace Game
         [SerializeField] private RectTransform wagerBoxParent;
 
         private PlayBoardManager playBoardManager;
+        private List<NumberOnBetBoardGUI> wagerBoxGUIs;
         private List<Wager> wagers;
         private int unit => 1;
 
         public void Initialize(BoardData boardData)
         {
             wagers = new List<Wager>();
+            wagerBoxGUIs = new List<NumberOnBetBoardGUI>();
             for(int i = 0; i < boardData.Boxes.Length; i++)
             {
                 var data = boardData.Boxes[i];
@@ -27,8 +27,6 @@ namespace Game
                 var box = Instantiate(wagerBoxPrefab, wagerBoxParent);
 
                 var rectTrans = box.transform as RectTransform;
-                rectTrans.ForceUpdateRectTransforms();
-                Debug.Log("Set data: " + data.Position);
                 rectTrans.anchoredPosition = data.Position;
                 rectTrans.sizeDelta = data.Size;
 
@@ -36,12 +34,14 @@ namespace Game
                 guiObject.Background.color = Extensions.StringToColor(data.Color);
                 guiObject.Text.text = data.VisualText;
                 AddHandler(guiObject, data);
+
+                wagerBoxGUIs.Add(guiObject);
             }
         }
 
         private void AddHandler(NumberOnBetBoardGUI guiObject, WagerBox data)
         {
-            guiObject.Button.onClick.AddListener(()=>
+            guiObject.Button.OnClick.AddListener(eventData =>
             {
                 float bonusRate = 1.5f;
                 WagerType wagerType = Extensions.StringToEnum<WagerType>(data.Name);
@@ -53,20 +53,13 @@ namespace Game
                         int betNumber = int.Parse(data.Logic);
 
                         // Find single wager has same bet number
-                        foreach(var e in wagers)
-                        {
-                            if(e.WagerType != WagerType.Single || (e as SingleNumberWager).BetNumber != betNumber) continue;
-                            wager = e;
-                            break;
-                        }
-
+                        wager = GetSingleWager(betNumber);
                         if(wager == null)
                         {
                             wager = new SingleNumberWager(0, bonusRate, betNumber);
                             wagers.Add(wager);
                         }
 
-                        AddCurrencyToWager(wager);
                         break;
 
                     case WagerType.Range:
@@ -75,98 +68,143 @@ namespace Game
                         int to = int.Parse(p[1]);
 
                         // Find wager has same range
-                        foreach(var e in wagers)
-                        {
-                            if(e.WagerType != WagerType.Range) continue;
-
-                            var range = e as RangeWager;
-                            if(from != range.From || to != range.To) continue;
-
-                            wager = e;
-                            break;
-                        }
-
+                        wager = GetRangeWager(from, to);
                         if(wager == null)
                         {
                             wager = new RangeWager(0, bonusRate, from, to);
                             wagers.Add(wager);
                         }
 
-                        AddCurrencyToWager(wager);
                         break;
 
                     case WagerType.Odd:
                         // Find wager has exist
-                        foreach(var e in wagers)
-                        {
-                            if(e.WagerType != WagerType.Odd) continue;
-                            wager = e;
-                            break;
-                        }
-
+                        wager = GetOddWager();
                         if(wager == null)
                         {
                             wager = new OddNumberWager(0, bonusRate);
                             wagers.Add(wager);
                         }
 
-                        AddCurrencyToWager(wager);
                         break;
 
                     case WagerType.Even:
                         // Find wager has exist
-                        foreach(var e in wagers)
-                        {
-                            if(e.WagerType != WagerType.Even) continue;
-                            wager = e;
-                            break;
-                        }
-
+                        wager = GetEvenWager();
                         if(wager == null)
                         {
                             wager = new EvenNumberWager(0, bonusRate);
                             wagers.Add(wager);
                         }
 
-                        AddCurrencyToWager(wager);
                         break;
 
                     case WagerType.Color:
                         string colorStr = data.Logic;
 
                         // Find wager has same color
-                        foreach(var e in wagers)
-                        {
-                            if(e.WagerType != WagerType.Color) continue;
-
-                            var color = e as ColorWager;
-                            if(!color.ColorInString.Equals(colorStr)) continue;
-
-                            wager = e;
-                            break;
-                        }
-
+                        wager = GetColorWager(colorStr);
                         if(wager == null)
                         {
                             wager = new ColorWager(0, bonusRate, colorStr);
                             wagers.Add(wager);
                         }
 
-                        AddCurrencyToWager(wager);   
                         break;
                 }
 
+
+                bool isAddCurrency = eventData.button == PointerEventData.InputButton.Left;
+                bool isWithdrawCurrency = eventData.button == PointerEventData.InputButton.Right;
+
+                if(isAddCurrency) AddCurrencyToWager(wager);
+                if(isWithdrawCurrency) WithdrawCurrencyFromWager(wager);
             });
         }
 
         private void AddCurrencyToWager(Wager wager)
         {
+            Debug.Log("Add Currency");
             wager.BetAmount += unit;
+        }
+
+        private void WithdrawCurrencyFromWager(Wager wager)
+        {
+            Debug.Log("Withdraw Currency");
+            wager.BetAmount -= unit;
+        }
+
+        private Wager GetSingleWager(int betNumber)
+        {
+            foreach(var e in wagers)
+            {
+                if(e.WagerType != WagerType.Single || (e as SingleNumberWager).BetNumber != betNumber) continue;
+                return e;
+            }
+
+            return null;
+        }
+
+        private Wager GetRangeWager(int from, int to)
+        {
+            foreach(var e in wagers)
+            {
+                if(e.WagerType != WagerType.Range) continue;
+
+                var range = e as RangeWager;
+                if(from != range.From || to != range.To) continue;
+
+                return e;
+            }
+
+            return null;
+        }
+
+        private Wager GetOddWager()
+        {
+            foreach(var e in wagers)
+            {
+                if(e.WagerType == WagerType.Odd) 
+                    return e;
+            }
+
+            return null;
+        }
+
+        private Wager GetEvenWager()
+        {
+            foreach(var e in wagers)
+            {
+                if(e.WagerType == WagerType.Even) 
+                    return e;
+            }
+
+            return null;
+        }
+
+        private Wager GetColorWager(string colorStr)
+        {
+            foreach(var e in wagers)
+            {
+                if(e.WagerType != WagerType.Color) continue;
+
+                var color = e as ColorWager;
+                if(!color.ColorInString.Equals(colorStr)) continue;
+
+                return e;
+            }
+
+            return null;
         }
 
         void Awake()
         {
             playBoardManager = GetComponent<PlayBoardManager>();
+        }
+
+        void Update()
+        {
+
         }
     }
 }

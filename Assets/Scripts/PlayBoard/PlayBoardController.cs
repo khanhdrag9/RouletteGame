@@ -13,12 +13,15 @@ namespace Game
         [SerializeField] private GameObject wagerBoxPrefab;
         [SerializeField] private RectTransform wagerBoxParent;
         [SerializeField] private Button spinBtn;
-        [SerializeField] private CircleSpinner spinner;
-
+        [SerializeField] private GameObject circleSpinnerPrefab;
+        [SerializeField] private RectTransform spinnerParent;
+ 
         private PlayBoardManager playBoardManager;
         private Player player => playBoardManager.Player;
         private List<NumberOnBetBoardGUI> wagerBoxGUIs;
         private List<Wager> wagers;
+        private ISpinner spinner;
+
         private int unit => 1;
 
         public void Initialize(BoardData boardData)
@@ -28,24 +31,39 @@ namespace Game
             for(int i = 0; i < boardData.Boxes.Length; i++)
             {
                 var data = boardData.Boxes[i];
+                GameObject obj = null;
 
-                var box = Instantiate(wagerBoxPrefab, wagerBoxParent);
+                // Spinner
+                if(data.Name.Equals(SpinnerType.SCircle.ToString()))
+                {
+                    obj = Instantiate(circleSpinnerPrefab, spinnerParent);
 
-                var rectTrans = box.transform as RectTransform;
+                    if(spinner != null) Destroy(spinner.GameObject);
+                    spinner = obj.GetComponent<ISpinner>();
+                    spinner.Initialize(Extensions.StringToIntArray(data.StrParam));
+                }
+
+                // Wagers
+                else
+                {
+                    obj = Instantiate(wagerBoxPrefab, wagerBoxParent);
+
+                    var guiObject = obj.GetComponent<NumberOnBetBoardGUI>();
+                    guiObject.Background.color = Extensions.StringToColor(data.Color);
+                    guiObject.Text.text = data.VisualText;
+                    AddWagerHandler(guiObject, data);
+                    guiObject.SetBetAmount(0);
+
+                    wagerBoxGUIs.Add(guiObject);
+                }
+
+                var rectTrans = obj.transform as RectTransform;
                 rectTrans.anchoredPosition = data.Position;
                 rectTrans.sizeDelta = data.Size;
-
-                var guiObject = box.GetComponent<NumberOnBetBoardGUI>();
-                guiObject.Background.color = Extensions.StringToColor(data.Color);
-                guiObject.Text.text = data.VisualText;
-                AddHandler(guiObject, data);
-                guiObject.SetBetAmount(0);
-
-                wagerBoxGUIs.Add(guiObject);
             }
         }
 
-        private void AddHandler(NumberOnBetBoardGUI guiObject, GUIObjectData data)
+        private void AddWagerHandler(NumberOnBetBoardGUI guiObject, GUIObjectData data)
         {
             guiObject.Button.OnClick.AddListener(eventData =>
             {
@@ -137,7 +155,6 @@ namespace Game
 
             wager.BetAmount += unit;
             guiObject.SetBetAmount(wager.BetAmount);
-
         }
 
         private void WithdrawCurrencyFromWager(Wager wager, NumberOnBetBoardGUI guiObject)
@@ -213,8 +230,8 @@ namespace Game
 
         private void Spin()
         {
+            spinner.Spin(0);
         }
-
 
         void Awake()
         {

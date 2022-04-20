@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-namespace Game
+namespace Game.Helper
 {
     public class ButtonExtension : MonoBehaviour, IPointerClickHandler 
     {

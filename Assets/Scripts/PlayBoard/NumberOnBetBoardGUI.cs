@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Game.Helper;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Game

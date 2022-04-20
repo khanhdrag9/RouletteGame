@@ -11,7 +11,7 @@ namespace Game
 
     public enum SpinnerType
     {
-        Circle
+        SCircle
     }
 
 

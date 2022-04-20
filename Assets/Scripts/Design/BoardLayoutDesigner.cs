@@ -63,7 +63,7 @@ namespace Design
 
                     // Spinner
                     case GUIObjectType.CircleSpinner:
-                        defineName = SpinnerType.Circle.ToString();
+                        defineName = SpinnerType.SCircle.ToString();
                         break;
                 }
 
@@ -84,13 +84,12 @@ namespace Design
                         break;
                     
                     case GUIObjectType.CircleSpinner:
-                        strParam = string.Join(string.Empty, (guiObject as SpinnerDesign).Order);
-                        Debug.Log("Param: " + strParam);
+                        strParam = Extensions.IntArrayToString((guiObject as SpinnerDesign).Order);
                         break;
                 }
 
                 // Get position with center anchor preset
-                // Cached design 
+                // Cache design 
                 var cacheParent = rectTrans.parent;
                 var cachePosition = rectTrans.position;
                 var cacheAnchorMin = rectTrans.anchorMin;

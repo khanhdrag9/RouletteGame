@@ -12,6 +12,7 @@ namespace Game
         [SerializeField] private RectTransform wagerBoxParent;
 
         private PlayBoardManager playBoardManager;
+        private Player player => playBoardManager.Player;
         private List<NumberOnBetBoardGUI> wagerBoxGUIs;
         private List<Wager> wagers;
         private int unit => 1;
@@ -34,6 +35,7 @@ namespace Game
                 guiObject.Background.color = Extensions.StringToColor(data.Color);
                 guiObject.Text.text = data.VisualText;
                 AddHandler(guiObject, data);
+                guiObject.SetBetAmount(0);
 
                 wagerBoxGUIs.Add(guiObject);
             }
@@ -113,25 +115,33 @@ namespace Game
                         break;
                 }
 
-
                 bool isAddCurrency = eventData.button == PointerEventData.InputButton.Left;
                 bool isWithdrawCurrency = eventData.button == PointerEventData.InputButton.Right;
 
-                if(isAddCurrency) AddCurrencyToWager(wager);
-                if(isWithdrawCurrency) WithdrawCurrencyFromWager(wager);
+                if(isAddCurrency) AddCurrencyToWager(wager, guiObject);
+                if(isWithdrawCurrency) WithdrawCurrencyFromWager(wager, guiObject);
             });
         }
 
-        private void AddCurrencyToWager(Wager wager)
+        private void AddCurrencyToWager(Wager wager, NumberOnBetBoardGUI guiObject)
         {
-            Debug.Log("Add Currency");
+            if(!player.Bet(unit))
+            {
+                // Not enough currency
+                return;
+            }
+
             wager.BetAmount += unit;
+            guiObject.SetBetAmount(wager.BetAmount);
+
         }
 
-        private void WithdrawCurrencyFromWager(Wager wager)
+        private void WithdrawCurrencyFromWager(Wager wager, NumberOnBetBoardGUI guiObject)
         {
-            Debug.Log("Withdraw Currency");
-            wager.BetAmount -= unit;
+            int withdrawAmount = wager.BetAmount < unit ? wager.BetAmount : unit;
+            wager.BetAmount -= withdrawAmount;
+            player.Withdraw(withdrawAmount);
+            guiObject.SetBetAmount(wager.BetAmount);
         }
 
         private Wager GetSingleWager(int betNumber)

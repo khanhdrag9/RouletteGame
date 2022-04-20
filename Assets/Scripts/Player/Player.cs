@@ -21,6 +21,11 @@ namespace Game
             return false;
         }
 
+        public void Withdraw(int betAmount)
+        {
+            bankroll.Receive(betAmount);
+        }
+
         public void Reward(int reward)
         {
             bankroll.Receive(reward);

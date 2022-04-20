@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Game.Bet;
 using UnityEngine;
 
-namespace Game
+namespace Game.Asset
 {
     [System.Serializable]
     public class BoardData

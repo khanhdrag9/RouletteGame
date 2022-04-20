@@ -4,6 +4,7 @@ using Game.Bet;
 using UnityEngine;
 using UnityEngine.UI;
 using Game.Helper;
+using Game.Asset;
 
 namespace Game
 {
@@ -74,47 +75,6 @@ namespace Game
             }
         }
 
-        private BoardData GetBoardData()
-        {
-            BoardData dataResult = null;
-
-            // Can handle getting data from server
-
-            // Test Data;
-            dataResult = new BoardData
-            {
-                
-
-                Numbers = new int[]
-                {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19},
-
-                AvailableBet = new BetData[]
-                {
-                    new BetData
-                    {
-                        Name = "single",
-                        Visual = "Single Number",
-                        BonusRate = 1.8f
-                    },
-                    new BetData
-                    {
-                        Name = "odd",
-                        Visual = "Odd Number",
-                        BonusRate = 1.4f
-                    },
-                    new BetData
-                    {
-                        Name = "even",
-                        Visual = "Even Number",
-                        BonusRate = 1.4f
-                    }
-                }
-            };
-
-            return dataResult;
-        } 
-
-
 #region Unity methods
         void Awake()
         {
@@ -124,8 +84,8 @@ namespace Game
 
         void Start()
         {
-            BoardData boardData = GetBoardData();
-            modeController.Initalize(boardData);
+            BoardData[] boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
+            playBoardController.Initialize(boardDatas[0]);
 
             modeController.Player = player;
             BoardState = BoardState.Betting;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Game.Bet;
 using UnityEngine.Events;
+using Game.Asset;
 
 namespace Game
 {
@@ -20,7 +21,7 @@ namespace Game
 
 
         private List<BetOptionGUI> betOptionGUIs = new List<BetOptionGUI>();
-        private List<WagerBase> bets = new List<WagerBase>();
+        private List<Wager> bets = new List<Wager>();
         private int betAmount
         {
             get 
@@ -123,7 +124,7 @@ namespace Game
                     return;
                 }
 
-                WagerBase bet = null;
+                Wager bet = null;
                 switch(defineName)
                 {
                     case Constants.BetSingleNumber:

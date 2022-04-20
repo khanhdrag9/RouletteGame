@@ -27,5 +27,22 @@ namespace Game.Helper
         {
             return (T) System.Enum.Parse(typeof(T), value, true);
         }
+
+        public static Vector2 ScreenToCustomUnit(Vector2 value)
+        {
+            // Fix height
+            float screenHeight = Screen.height;
+            float generalHeight = 10f;
+
+            return new Vector2(value.x * generalHeight / screenHeight, value.y * generalHeight / screenHeight);
+        }
+
+        public static Vector2 CustomUnitToScreen(Vector2 value)
+        {
+            float screenHeight = Screen.height;
+            float generalHeight = 10f;
+
+            return new Vector2(value.x * screenHeight / generalHeight, value.y * screenHeight / generalHeight);
+        }
     }
 }

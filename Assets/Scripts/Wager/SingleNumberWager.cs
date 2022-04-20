@@ -1,6 +1,6 @@
 namespace Game
 {
-    public class SingleNumberWager : WagerBase
+    public class SingleNumberWager : Wager
     {
         public override WagerType WagerType => WagerType.Single;
 
@@ -10,7 +10,6 @@ namespace Game
         {
             this.BetNumber = betNumber;
         }
-
 
         public override bool IsRewardAble()
         {

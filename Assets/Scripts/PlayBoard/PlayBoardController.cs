@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Asset;
 using Game.Bet;
 using Game.Helper;
 using UnityEngine;
@@ -13,12 +14,12 @@ namespace Game
         [SerializeField] private RectTransform wagerBoxParent;
 
         private PlayBoardManager playBoardManager;
-        private List<WagerBase> wagers;
+        private List<Wager> wagers;
         private int unit => 1;
 
         public void Initialize(BoardData boardData)
         {
-            wagers = new List<WagerBase>();
+            wagers = new List<Wager>();
             for(int i = 0; i < boardData.Boxes.Length; i++)
             {
                 var data = boardData.Boxes[i];
@@ -26,7 +27,7 @@ namespace Game
                 var box = Instantiate(wagerBoxPrefab, wagerBoxParent);
 
                 var transform = box.transform as RectTransform;
-                transform.position = data.Position;
+                transform.localPosition = Extensions.CustomUnitToScreen(data.Position);
                 transform.sizeDelta = data.Size;
 
                 var guiObject = box.GetComponent<NumberOnBetBoardGUI>();
@@ -42,7 +43,7 @@ namespace Game
             {
                 float bonusRate = 1.5f;
                 WagerType wagerType = Extensions.StringToEnum<WagerType>(data.Name);
-                WagerBase wager = null;
+                Wager wager = null;
 
                 switch(wagerType)
                 {
@@ -67,6 +68,29 @@ namespace Game
                         break;
 
                     case WagerType.Range:
+                        var p = data.Logic.Split('-');  // expect logic is [from]-[to], example: 1-10
+                        int from = int.Parse(p[0]);
+                        int to = int.Parse(p[1]);
+
+                        // Find wager has same range
+                        foreach(var e in wagers)
+                        {
+                            if(e.WagerType != WagerType.Range) continue;
+
+                            var range = e as RangeWager;
+                            if(from != range.From || to != range.To) continue;
+
+                            wager = e;
+                            break;
+                        }
+
+                        if(wager == null)
+                        {
+                            wager = new RangeWager(0, bonusRate, from, to);
+                            wagers.Add(wager);
+                        }
+
+                        AddCurrencyToWager(wager);
                         break;
 
                     case WagerType.Odd:
@@ -106,13 +130,34 @@ namespace Game
                         break;
 
                     case WagerType.Color:
+                        string colorStr = data.Logic;
+
+                        // Find wager has same color
+                        foreach(var e in wagers)
+                        {
+                            if(e.WagerType != WagerType.Color) continue;
+
+                            var color = e as ColorWager;
+                            if(!color.ColorInString.Equals(colorStr)) continue;
+
+                            wager = e;
+                            break;
+                        }
+
+                        if(wager == null)
+                        {
+                            wager = new ColorWager(0, bonusRate, colorStr);
+                            wagers.Add(wager);
+                        }
+
+                        AddCurrencyToWager(wager);   
                         break;
                 }
 
             });
         }
 
-        private void AddCurrencyToWager(WagerBase wager)
+        private void AddCurrencyToWager(Wager wager)
         {
             wager.BetAmount += unit;
         }

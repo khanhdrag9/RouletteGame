@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Game.Helper;
+using Game.Asset;
 
 namespace Design
 {
@@ -21,13 +22,14 @@ namespace Design
         {
             Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
 
+            Camera camera = Camera.main;
+
             // Create GUI Object
             var guiObjects = GetComponentsInChildren<GUIObject>(true);
             var boxes = new WagerBox[guiObjects.Length];
             for(int i = 0; i < guiObjects.Length; i++)
             {
                 var guiObject = guiObjects[i];
-                var transform = guiObject.transform as RectTransform;
                 var image = guiObject.GetComponent<Image>();
                 var text = guiObject.GetComponentInChildren<Text>();
 
@@ -65,19 +67,22 @@ namespace Design
                         break;
                     case GUIObjectType.ColorWager:
                         var color = guiObject as ColorWagerGUI;
-                        logic = $"{color.color.ToString()}";
+                        logic = $"{Extensions.ColorToString(color.color)}";
                         break;
                 }
 
                 boxes[i] = new WagerBox
                 {
                     Name = defineName,
-                    Position = transform.position,
-                    Size = transform.sizeDelta,
+                    Position = Extensions.ScreenToCustomUnit(guiObject.transform.position),
+                    Size = (guiObject.transform as RectTransform).sizeDelta,
                     Color = Extensions.ColorToString(image.color),
                     VisualText = text.text,
                     Logic = logic
                 };
+
+                if(i == 0)
+                    Debug.Log("Log Test: " + boxes[i].Position);
             }
 
             var boardData = new BoardData
@@ -112,7 +117,7 @@ namespace Design
                 var box = Instantiate(numberBoxPrefab, test);
                 var transform = box.transform as RectTransform;
                 
-                transform.position = data.Position;
+                transform.position = Extensions.CustomUnitToScreen(data.Position);
                 transform.sizeDelta = data.Size;
                 box.GetComponent<Image>().color = Extensions.StringToColor(data.Color);
                 box.GetComponentInChildren<Text>().text = data.VisualText;

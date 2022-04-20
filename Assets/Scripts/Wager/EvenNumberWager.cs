@@ -1,6 +1,6 @@
 namespace Game
 {
-    public class EvenNumberWager : WagerBase
+    public class EvenNumberWager : Wager
     {
         public override WagerType WagerType => WagerType.Even;
 

@@ -9,6 +9,11 @@ namespace Game
         Color
     }
 
+    public enum SpinnerType
+    {
+        Circle
+    }
+
 
     public static class Constants
     {

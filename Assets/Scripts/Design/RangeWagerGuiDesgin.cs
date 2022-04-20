@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Design
 {
-    public class RangeWagerGUI : GUIObject
+    public class RangeWagerGuiDesgin : GuiDesignObject
     {
         [SerializeField] public int From;
         [SerializeField] public int To;

@@ -22,8 +22,9 @@ namespace Design
         void GenerateJson()
         {
             // Create GUI Object data
-            var guiObjects = GetComponentsInChildren<GUIObject>(true);
-            var boxes = new WagerBox[guiObjects.Length];
+            var guiObjects = GetComponentsInChildren<GuiDesignObject>(true);
+            var boxes = new GUIObjectData[guiObjects.Length];
+            var cacheParents = new Transform[guiObjects.Length];
             for(int i = 0; i < guiObjects.Length; i++)
             {
                 var guiObject = guiObjects[i];
@@ -31,10 +32,19 @@ namespace Design
                 var image = guiObject.GetComponent<Image>();
                 var text = guiObject.GetComponentInChildren<Text>();
 
+                Vector2 size = rectTrans.sizeDelta;
+
+                string colorStr = "";
+                if(image) colorStr = Extensions.ColorToString(image.color);
+
+                string visualText = "";
+                if(text) visualText = text.text;
+
                 // Convert GUIObjectType enum to WagerType enum if guiObject is a wager UI
                 string defineName = guiObject.Type.ToString();
                 switch(guiObject.Type)
                 {
+                    // Wager
                     case GUIObjectType.SingleWager:
                         defineName = WagerType.Single.ToString();
                         break;
@@ -50,22 +60,32 @@ namespace Design
                     case GUIObjectType.ColorWager:
                         defineName = WagerType.Color.ToString();
                         break;
+
+                    // Spinner
+                    case GUIObjectType.CircleSpinner:
+                        defineName = SpinnerType.Circle.ToString();
+                        break;
                 }
 
                 // Express logic in string
-                string logic = "";
+                string strParam = "";
                 switch(guiObject.Type)
                 {
                     case GUIObjectType.SingleWager:
-                        logic = text.text;
+                        strParam = text.text;
                         break;
                     case GUIObjectType.RangeWager:
-                        var range = guiObject as RangeWagerGUI;
-                        logic = $"{range.From}-{range.To}";
+                        var range = guiObject as RangeWagerGuiDesgin;
+                        strParam = $"{range.From}-{range.To}";
                         break;
                     case GUIObjectType.ColorWager:
-                        var color = guiObject as ColorWagerGUI;
-                        logic = $"{Extensions.ColorToString(color.color)}";
+                        var color = guiObject as ColorWagerGuiDesign;
+                        strParam = $"{Extensions.ColorToString(color.color)}";
+                        break;
+                    
+                    case GUIObjectType.CircleSpinner:
+                        strParam = string.Join(string.Empty, (guiObject as SpinnerDesign).Order);
+                        Debug.Log("Param: " + strParam);
                         break;
                 }
 
@@ -77,7 +97,7 @@ namespace Design
                 var cacheAnchorMax = rectTrans.anchorMax;
 
                 // Find position when anchor preset is center
-                rectTrans.SetParent(templateTransform);
+                rectTrans.parent = templateTransform;
                 rectTrans.anchorMin = new Vector2(0.5f, 0.5f);
                 rectTrans.anchorMax = new Vector2(0.5f, 0.5f);
                 rectTrans.ForceUpdateRectTransforms();
@@ -85,21 +105,22 @@ namespace Design
 
                 Vector3 position = rectTrans.anchoredPosition;
 
-                // Revert
-                rectTrans.SetParent(cacheParent);
+                // Revert anchors
+                rectTrans.parent = cacheParent;
                 rectTrans.anchorMin = cacheAnchorMin;
                 rectTrans.anchorMax = cacheAnchorMax;
 
-                boxes[i] = new WagerBox
+                boxes[i] = new GUIObjectData
                 {
                     Name = defineName,
                     Position = position,
-                    Size = rectTrans.sizeDelta,
-                    Color = Extensions.ColorToString(image.color),
-                    VisualText = text.text,
-                    Logic = logic
+                    Size = size,
+                    Color = colorStr,
+                    VisualText = visualText,
+                    StrParam = strParam
                 };
             }
+
 
             Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
             var boardData = new BoardData

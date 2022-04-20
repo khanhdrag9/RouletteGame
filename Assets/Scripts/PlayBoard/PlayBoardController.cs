@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Game.Asset;
 using Game.Helper;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -10,6 +12,8 @@ namespace Game
     {
         [SerializeField] private GameObject wagerBoxPrefab;
         [SerializeField] private RectTransform wagerBoxParent;
+        [SerializeField] private Button spinBtn;
+        [SerializeField] private CircleSpinner spinner;
 
         private PlayBoardManager playBoardManager;
         private Player player => playBoardManager.Player;
@@ -41,7 +45,7 @@ namespace Game
             }
         }
 
-        private void AddHandler(NumberOnBetBoardGUI guiObject, WagerBox data)
+        private void AddHandler(NumberOnBetBoardGUI guiObject, GUIObjectData data)
         {
             guiObject.Button.OnClick.AddListener(eventData =>
             {
@@ -52,7 +56,7 @@ namespace Game
                 switch(wagerType)
                 {
                     case WagerType.Single:
-                        int betNumber = int.Parse(data.Logic);
+                        int betNumber = int.Parse(data.StrParam);
 
                         // Find single wager has same bet number
                         wager = GetSingleWager(betNumber);
@@ -65,7 +69,7 @@ namespace Game
                         break;
 
                     case WagerType.Range:
-                        var p = data.Logic.Split('-');  // expect logic is [from]-[to], example: 1-10
+                        var p = data.StrParam.Split('-');  // expect logic is [from]-[to], example: 1-10
                         int from = int.Parse(p[0]);
                         int to = int.Parse(p[1]);
 
@@ -102,7 +106,7 @@ namespace Game
                         break;
 
                     case WagerType.Color:
-                        string colorStr = data.Logic;
+                        string colorStr = data.StrParam;
 
                         // Find wager has same color
                         wager = GetColorWager(colorStr);
@@ -207,9 +211,15 @@ namespace Game
             return null;
         }
 
+        private void Spin()
+        {
+        }
+
+
         void Awake()
         {
             playBoardManager = GetComponent<PlayBoardManager>();
+            spinBtn.onClick.AddListener(Spin);
         }
 
         void Update()

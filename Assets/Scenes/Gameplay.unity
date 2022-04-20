@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 24903306}
   - component: {fileID: 24903307}
   - component: {fileID: 24903309}
-  - component: {fileID: 24903308}
   m_Layer: 0
   m_Name: PlayBoardManager
   m_TagString: Untagged
@@ -171,7 +170,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1737957215}
-  modeController: {fileID: 24903308}
   playBoardController: {fileID: 24903309}
   stateDatas:
   - State: 1
@@ -180,23 +178,6 @@ MonoBehaviour:
     Component: {fileID: 285136167}
   playerCurrency: {fileID: 111511209}
   debugSpinResult: 0
---- !u!114 &24903308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 24903305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11930af27df6c1d418cb156ab4de8cb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spinnerElementGroup: {fileID: 939789576}
-  spinnerElementPrefab: {fileID: 4099079064361651691, guid: 4550baf4db1af3c40b4ffe57d9834b59, type: 3}
-  betOptionGroup: {fileID: 0}
-  betOptionPrefab: {fileID: 5318911019618378504, guid: 68ec91cb1ab71664dac001aee71c417e, type: 3}
-  betAmountInput: {fileID: 1227968778}
 --- !u!114 &24903309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,6 +192,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wagerBoxPrefab: {fileID: 8179512777050739667, guid: 1f4febb596c7e9b41aafcd61fc0f534b, type: 3}
   wagerBoxParent: {fileID: 1827800251}
+  spinBtn: {fileID: 1410800905}
+  spinner: {fileID: 939789579}
 --- !u!1 &56367343
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,8 +661,9 @@ GameObject:
   - component: {fileID: 939789576}
   - component: {fileID: 939789578}
   - component: {fileID: 939789577}
+  - component: {fileID: 939789579}
   m_Layer: 5
-  m_Name: Spinner
+  m_Name: Circle Spinner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -711,7 +695,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939789575}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -742,6 +726,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939789575}
   m_CullTransparentMesh: 1
+--- !u!114 &939789579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939789575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05548b7f64f4474183d4797c7f151f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinnerElementGroup: {fileID: 939789576}
+  spinnerElementPrefab: {fileID: 4099079064361651691, guid: 4550baf4db1af3c40b4ffe57d9834b59, type: 3}
 --- !u!1 &958230833
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,17 +18,14 @@ namespace Game.Asset
         /// <summary>
         /// Array data of objects which is used to place wager
         /// </summary>
-        public WagerBox[] Boxes;
-        
-        public int[] Numbers;
-        public BetData[] AvailableBet;
+        public GUIObjectData[] Boxes;
     }
 
     /// <summary>
     /// Data used to create UI object which help player to place wager
     /// </summary>
     [System.Serializable]
-    public class WagerBox
+    public class GUIObjectData
     {
         /// <summary>
         /// Name of object
@@ -58,8 +55,8 @@ namespace Game.Asset
         public string VisualText;
 
         /// <summary>
-        /// Logic data which is expressed by string
+        /// String parameter, used for multi purposes
         /// </summary>
-        public string Logic;
+        public string StrParam;
     }
 }

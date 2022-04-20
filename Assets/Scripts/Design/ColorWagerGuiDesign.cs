@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Design
 {
-    public class ColorWagerGUI : GUIObject
+    public class ColorWagerGuiDesign : GuiDesignObject
     {
         [SerializeField] public Color color;
     }

@@ -8,14 +8,11 @@ namespace Game
 {
     public class SpinningState : BoardStateBase
     {
-        private ModeController modeController => playBoardManager.ModeController;
-
         Coroutine spinningCoroutine;
         private IEnumerator Spinning()
         {
             yield return new WaitForSeconds(3f);
 
-            modeController.CheckRewardOfPlayer();
             playBoardManager.BoardState = BoardState.Betting;
         }
 

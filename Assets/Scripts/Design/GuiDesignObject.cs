@@ -11,10 +11,12 @@ namespace Design
         RangeWager,
         OddWager,
         EvenWager,
-        ColorWager
+        ColorWager,
+
+        CircleSpinner
     }
 
-    public class GUIObject : MonoBehaviour
+    public class GuiDesignObject : MonoBehaviour
     {
         [SerializeField] public GUIObjectType Type;
     }

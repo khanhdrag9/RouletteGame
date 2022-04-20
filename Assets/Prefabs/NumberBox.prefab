@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2089725271811313480}
   - component: {fileID: 2089725271811313486}
-  - component: {fileID: 2089725271811313481}
   - component: {fileID: 6916371653171256701}
+  - component: {fileID: 6355863304980398236}
   m_Layer: 5
   m_Name: NumberBox
   m_TagString: Untagged
@@ -47,19 +47,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089725271811313483}
   m_CullTransparentMesh: 1
---- !u!114 &2089725271811313481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2089725271811313483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d357e24f205ba7449ffdf68a745032d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 0
 --- !u!114 &6916371653171256701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +77,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6355863304980398236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089725271811313483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a2a4767498fd6f48921236da03fff35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
 --- !u!1 &2089725272988881182
 GameObject:
   m_ObjectHideFlags: 0

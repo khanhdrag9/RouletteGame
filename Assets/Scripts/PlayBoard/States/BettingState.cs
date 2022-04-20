@@ -11,7 +11,6 @@ namespace Game
         [SerializeField] private Button spinButton;
 
         private Player player => playBoardManager.Player;
-        private ModeController modeController => playBoardManager.ModeController;
 
         private void Spin()
         {
@@ -28,13 +27,11 @@ namespace Game
         private void OnEnable() 
         {
             spinButton.gameObject.SetActive(true);
-            modeController.SetBetable(true);
         }
 
         private void OnDisable() 
         {
             if(spinButton) spinButton.gameObject.SetActive(false);
-            if(modeController) modeController.SetBetable(false);
         }
 
 #endregion

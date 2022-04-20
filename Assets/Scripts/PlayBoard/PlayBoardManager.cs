@@ -29,7 +29,6 @@ namespace Game
 
         [Header("General")]
         [SerializeField] private Player player;
-        [SerializeField] private ModeController modeController;
         [SerializeField] private PlayBoardController playBoardController;
         [SerializeField] private List<BoardStateData> stateDatas;
 
@@ -44,7 +43,6 @@ namespace Game
         // public int Result {get; private set;} = -1;
         public int Result => debugSpinResult;
         public Player Player => player;
-        public ModeController ModeController => modeController;
         public BoardState BoardState
         {
             get => boardState;
@@ -87,7 +85,6 @@ namespace Game
             BoardData[] boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
             playBoardController.Initialize(boardDatas[0]);
 
-            modeController.Player = player;
             BoardState = BoardState.Betting;
         }
 

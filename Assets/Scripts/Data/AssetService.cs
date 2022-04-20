@@ -22,9 +22,11 @@ namespace Game.Asset
 
     class LocalResourcesLoader : IAssetLoader
     {
+        const string StorageFolder = "ListBoardData";
+        
         public BoardData[] GetBoardDatas()
         {
-            var jsonAssets = Resources.LoadAll<TextAsset>("ListBoardData");
+            var jsonAssets = Resources.LoadAll<TextAsset>(StorageFolder);
             var result = new BoardData[jsonAssets.Length];
 
             for(int i = 0; i < jsonAssets.Length; i++)

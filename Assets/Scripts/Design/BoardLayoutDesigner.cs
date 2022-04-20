@@ -13,27 +13,25 @@ namespace Design
     {
         [SerializeField] private Transform test;
         [SerializeField] private GameObject numberBoxPrefab;
+        [SerializeField] private RectTransform templateTransform;
 
 #if UNITY_EDITOR
-        string jsonPath => Application.dataPath + "/Resources/boardData.json";
+        string jsonPath => Application.dataPath + "/Resources/ListBoardData/boardData.json";
 
         [ContextMenu("Generate Json")]
         void GenerateJson()
         {
-            Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
-
-            Camera camera = Camera.main;
-
-            // Create GUI Object
+            // Create GUI Object data
             var guiObjects = GetComponentsInChildren<GUIObject>(true);
             var boxes = new WagerBox[guiObjects.Length];
             for(int i = 0; i < guiObjects.Length; i++)
             {
                 var guiObject = guiObjects[i];
+                var rectTrans = guiObject.transform as RectTransform;
                 var image = guiObject.GetComponent<Image>();
                 var text = guiObject.GetComponentInChildren<Text>();
 
-                // Convert GUIObjectType to WagerType if guiObject is a wager UI
+                // Convert GUIObjectType enum to WagerType enum if guiObject is a wager UI
                 string defineName = guiObject.Type.ToString();
                 switch(guiObject.Type)
                 {
@@ -54,7 +52,7 @@ namespace Design
                         break;
                 }
 
-                // express logic in string
+                // Express logic in string
                 string logic = "";
                 switch(guiObject.Type)
                 {
@@ -71,20 +69,40 @@ namespace Design
                         break;
                 }
 
+                // Get position with center anchor preset
+                // Cached design 
+                var cacheParent = rectTrans.parent;
+                var cachePosition = rectTrans.position;
+                var cacheAnchorMin = rectTrans.anchorMin;
+                var cacheAnchorMax = rectTrans.anchorMax;
+
+                // Find position when anchor preset is center
+                rectTrans.SetParent(templateTransform);
+                rectTrans.anchorMin = new Vector2(0.5f, 0.5f);
+                rectTrans.anchorMax = new Vector2(0.5f, 0.5f);
+                rectTrans.ForceUpdateRectTransforms();
+                rectTrans.position = cachePosition;
+
+                Vector3 position = rectTrans.anchoredPosition;
+
+                // Revert
+                // rectTrans.SetParent(cacheParent);
+                // rectTrans.anchorMin = cacheAnchorMin;
+                // rectTrans.anchorMax = cacheAnchorMax;
+                
+
                 boxes[i] = new WagerBox
                 {
                     Name = defineName,
-                    Position = Extensions.ScreenToCustomUnit(guiObject.transform.position),
-                    Size = (guiObject.transform as RectTransform).sizeDelta,
+                    Position = position,
+                    Size = rectTrans.sizeDelta,
                     Color = Extensions.ColorToString(image.color),
                     VisualText = text.text,
                     Logic = logic
                 };
-
-                if(i == 0)
-                    Debug.Log("Log Test: " + boxes[i].Position);
             }
 
+            Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
             var boardData = new BoardData
             {
                 DesignResolution = resolution,
@@ -104,11 +122,9 @@ namespace Design
         [ContextMenu("Test Json")]
         void TestJson()
         {
-            Clear();
-
             if(!File.Exists(jsonPath))
                 return;
-            
+
             var boardData = JsonUtility.FromJson<BoardData>(File.ReadAllText(jsonPath));
             for(int i = 0; i < boardData.Boxes.Length; i++)
             {
@@ -117,18 +133,11 @@ namespace Design
                 var box = Instantiate(numberBoxPrefab, test);
                 var transform = box.transform as RectTransform;
                 
-                transform.position = Extensions.CustomUnitToScreen(data.Position);
+                transform.anchoredPosition = data.Position;
                 transform.sizeDelta = data.Size;
                 box.GetComponent<Image>().color = Extensions.StringToColor(data.Color);
                 box.GetComponentInChildren<Text>().text = data.VisualText;
             }
-        }
-
-        [ContextMenu("Clear")]
-        void Clear()
-        {
-            foreach(Transform e in test)
-                DestroyImmediate(e.gameObject);
         }
 #endif
 

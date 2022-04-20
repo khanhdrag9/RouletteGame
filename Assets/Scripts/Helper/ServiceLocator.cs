@@ -14,7 +14,7 @@ namespace Game.Helper
             {
                 serviceCache.Add(key, service);
             }
-            else  // overwrite the existing instance.
+            else 
             {
                 serviceCache[key] = service;
             }

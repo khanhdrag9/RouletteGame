@@ -26,9 +26,11 @@ namespace Game
 
                 var box = Instantiate(wagerBoxPrefab, wagerBoxParent);
 
-                var transform = box.transform as RectTransform;
-                transform.localPosition = Extensions.CustomUnitToScreen(data.Position);
-                transform.sizeDelta = data.Size;
+                var rectTrans = box.transform as RectTransform;
+                rectTrans.ForceUpdateRectTransforms();
+                Debug.Log("Set data: " + data.Position);
+                rectTrans.anchoredPosition = data.Position;
+                rectTrans.sizeDelta = data.Size;
 
                 var guiObject = box.GetComponent<NumberOnBetBoardGUI>();
                 guiObject.Background.color = Extensions.StringToColor(data.Color);

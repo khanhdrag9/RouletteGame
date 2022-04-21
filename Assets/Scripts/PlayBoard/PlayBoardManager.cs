@@ -23,10 +23,6 @@ namespace Game
         [SerializeField] private Player player;
         [SerializeField] private PlayBoardController playBoardController;
 
-        [Header("GUI")]
-        [SerializeField] private Text playerCurrency;
-
-
         public Player Player => player;
 
 

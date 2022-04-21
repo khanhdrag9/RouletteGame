@@ -10,15 +10,25 @@ namespace Game
 {
     public class PlayBoardController : MonoBehaviour
     {
+        [Header("Play board")]
         [SerializeField] private GameObject wagerBoxPrefab;
         [SerializeField] private RectTransform wagerBoxParent;
         [SerializeField] private Button spinBtn;
         [SerializeField] private GameObject circleSpinnerPrefab;
         [SerializeField] private RectTransform spinnerParent;
+
+        [Header("About currency")]
         [SerializeField] private InputField playerCurrencyTxt;
         [SerializeField] private InputField betAmountInput;
         [SerializeField] private InputField totalBetAmountTxt;
         [SerializeField] private int startBetAmount = 10;
+
+        [Header("Result")]
+        [SerializeField] private GameObject resultLayout;
+        [SerializeField] private Text resultBetAmountTxt;
+        [SerializeField] private Text resultRewardTxt;
+        [SerializeField] private Button closeResultBtn;
+
  
         private PlayBoardManager playBoardManager;
         private Player player => playBoardManager.Player;
@@ -41,7 +51,6 @@ namespace Game
                 betAmountInput.text = value.ToString();
             }
         }
-
 
         public void Initialize(BoardData boardData)
         {
@@ -269,13 +278,13 @@ namespace Game
             switch(newState)
             {
                 case State.Betting:
-                    state = new Betting();
+                    state = bettingState;
                     break;
                 case State.Spinning:
-                    state = new Spinning();
+                    state = spinningState;
                     break;
                 case State.Result:
-                    state = new Result();
+                    state = resultState;
                     break;
                 default:
                     state = null;
@@ -294,10 +303,16 @@ namespace Game
             ChangeState(State.Spinning);
         }
 
+        private void CloseResult()
+        {
+            ChangeState(State.Betting);
+        }
+
         void Awake()
         {
             playBoardManager = GetComponent<PlayBoardManager>();
             spinBtn.onClick.AddListener(Spin);
+            closeResultBtn.onClick.AddListener(CloseResult);
         }
 
         void Update()
@@ -306,6 +321,10 @@ namespace Game
         }
     
 #region States
+        private static Betting bettingState = new Betting();
+        private static Spinning spinningState = new Spinning();
+        private static Result resultState = new Result();
+
         enum State
         {
             None, Betting, Spinning, Result
@@ -322,9 +341,11 @@ namespace Game
         class Betting : IState
         {
             public PlayBoardController controller {get; set;}
+            public int LastestTotalBetAmount {get; private set;}
 
             public void Enter()
             {
+                controller.spinBtn.gameObject.SetActive(true);
                 controller.spinnerParent.gameObject.SetActive(false);
                 controller.blockBetting = false;
             }
@@ -337,6 +358,7 @@ namespace Game
                 foreach(var e in controller.wagers)
                     totalBetAmount += e.BetAmount;
                 controller.totalBetAmountTxt.text = totalBetAmount.ToString(); 
+                LastestTotalBetAmount = totalBetAmount;
             }
 
             public void Exit()
@@ -347,12 +369,14 @@ namespace Game
         class Spinning : IState
         {
             public PlayBoardController controller {get; set;}
+            public int LastesReward {get; private set;}
 
             private Coroutine handleSpin;
             private BettingHistory history => ServiceLocator.GetService<BettingHistory>();
 
             public void Enter()
             {
+                controller.spinBtn.gameObject.SetActive(false);
                 controller.spinnerParent.gameObject.SetActive(true);
                 controller.blockBetting = true;
                 handleSpin = controller.StartCoroutine(HandleSpin());
@@ -383,7 +407,8 @@ namespace Game
                 CheckRewardForPlayer();
                 controller.spinner.Spin(expectResult.Number);
 
-                yield return new WaitForSeconds(3);
+                yield return new WaitUntil(()=>!controller.spinner.IsSpinning);
+                yield return new WaitForSeconds(1f);
 
                 controller.ChangeState(State.Result);
             } 
@@ -392,6 +417,8 @@ namespace Game
             {
                 var player = controller.player;
                 var wagers = controller.wagers;
+                int cachePlayerCurrency = player.CurrencyCount;
+
                 foreach(var wager in wagers)
                 {
                     if(wager.IsRewardAble())
@@ -399,6 +426,10 @@ namespace Game
                         wager.Reward(player);
                     }
                 }
+
+                LastesReward = player.CurrencyCount - cachePlayerCurrency;
+
+                wagers.Clear();
             }
         }
 
@@ -409,6 +440,11 @@ namespace Game
             public void Enter()
             {
                 controller.playerCurrencyTxt.text = controller.player.CurrencyCount.ToString();
+                controller.resultLayout.SetActive(true);
+                controller.resultBetAmountTxt.text  = $"Bet:    {bettingState.LastestTotalBetAmount.ToString()}";
+                controller.resultRewardTxt.text     = $"Reward: {spinningState.LastesReward.ToString()}";
+
+                Debug.Log($"Player bet {bettingState.LastestTotalBetAmount} and won {spinningState.LastesReward}");
             }
 
             public void Update()
@@ -417,6 +453,7 @@ namespace Game
 
             public void Exit()
             {
+                controller.resultLayout.SetActive(false);
             }
         }
         #endregion

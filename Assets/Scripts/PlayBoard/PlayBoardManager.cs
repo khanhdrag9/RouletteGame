@@ -40,6 +40,7 @@ namespace Game
         {
             BoardData[] boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
             playBoardController.Initialize(boardDatas[0]);
+            playBoardController.Play();
         }
 
         void Update()

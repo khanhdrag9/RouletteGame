@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Helper
 {
     [RequireComponent(typeof(Text))]
     public class TextExtension : MonoBehaviour

@@ -15,7 +15,10 @@ namespace Game
         [SerializeField] private Button spinBtn;
         [SerializeField] private GameObject circleSpinnerPrefab;
         [SerializeField] private RectTransform spinnerParent;
-        [SerializeField] private TextExtension playerCurrencyTxt;
+        [SerializeField] private InputField playerCurrencyTxt;
+        [SerializeField] private InputField betAmountInput;
+        [SerializeField] private InputField totalBetAmountTxt;
+        [SerializeField] private int startBetAmount = 10;
  
         private PlayBoardManager playBoardManager;
         private Player player => playBoardManager.Player;
@@ -23,8 +26,21 @@ namespace Game
         private List<Wager> wagers;
         private ISpinner spinner;
         private IState state;
+        private bool blockBetting;
+        private int betAmount
+        {
+            get 
+            {
+                if(int.TryParse(betAmountInput.text, out int result))
+                    return result;
 
-        private int unit => 1;
+                return 0;
+            }
+            set
+            {
+                betAmountInput.text = value.ToString();
+            }
+        }
 
 
         public void Initialize(BoardData boardData)
@@ -70,6 +86,7 @@ namespace Game
 
         public void Play()
         {
+            betAmount = startBetAmount;
             ChangeState(State.Betting);
         }
 
@@ -77,6 +94,8 @@ namespace Game
         {
             guiObject.Button.OnClick.AddListener(eventData =>
             {
+                if(blockBetting) return;
+
                 float bonusRate = 1.5f;
                 WagerType wagerType = Extensions.StringToEnum<WagerType>(data.Name);
                 Wager wager = null;
@@ -157,19 +176,19 @@ namespace Game
 
         private void AddCurrencyToWager(Wager wager, NumberOnBetBoardGUI guiObject)
         {
-            if(!player.Bet(unit))
+            if(!player.Bet(betAmount))
             {
                 // Not enough currency
                 return;
             }
 
-            wager.BetAmount += unit;
+            wager.BetAmount += betAmount;
             guiObject.SetBetAmount(wager.BetAmount);
         }
 
         private void WithdrawCurrencyFromWager(Wager wager, NumberOnBetBoardGUI guiObject)
         {
-            int withdrawAmount = wager.BetAmount < unit ? wager.BetAmount : unit;
+            int withdrawAmount = wager.BetAmount < betAmount ? wager.BetAmount : betAmount;
             wager.BetAmount -= withdrawAmount;
             player.Withdraw(withdrawAmount);
             guiObject.SetBetAmount(wager.BetAmount);
@@ -303,12 +322,17 @@ namespace Game
             public void Enter()
             {
                 controller.spinnerParent.gameObject.SetActive(false);
+                controller.blockBetting = false;
             }
 
             public void Update()
             {
-                controller.playerCurrencyTxt.TextValue = controller.player.CurrencyCount.ToString();
-                controller.playerCurrencyTxt.UpdateVisual();
+                controller.playerCurrencyTxt.text = controller.player.CurrencyCount.ToString();
+
+                int totalBetAmount = 0;
+                foreach(var e in controller.wagers)
+                    totalBetAmount += e.BetAmount;
+                controller.totalBetAmountTxt.text = totalBetAmount.ToString(); 
             }
 
             public void Exit()
@@ -326,6 +350,7 @@ namespace Game
             public void Enter()
             {
                 controller.spinnerParent.gameObject.SetActive(true);
+                controller.blockBetting = true;
                 handleSpin = controller.StartCoroutine(HandleSpin());
             }
 
@@ -379,8 +404,7 @@ namespace Game
 
             public void Enter()
             {
-                controller.playerCurrencyTxt.TextValue = controller.player.CurrencyCount.ToString();
-                controller.playerCurrencyTxt.UpdateVisual();
+                controller.playerCurrencyTxt.text = controller.player.CurrencyCount.ToString();
             }
 
             public void Update()

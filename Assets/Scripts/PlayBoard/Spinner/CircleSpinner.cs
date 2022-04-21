@@ -29,8 +29,8 @@ namespace Game
         private float anglePerItem;
         private float angle
         {
-            get => transform.eulerAngles.z;
-            set => transform.eulerAngles = new Vector3(0f, 0f, value);
+            get => spinnerItemGroup.eulerAngles.z;
+            set => spinnerItemGroup.eulerAngles = new Vector3(0f, 0f, value);
         }
 
 

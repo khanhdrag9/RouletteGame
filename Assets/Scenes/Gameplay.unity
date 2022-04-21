@@ -169,7 +169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1737957215}
   playBoardController: {fileID: 24903309}
-  playerCurrency: {fileID: 0}
 --- !u!114 &24903309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +230,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.34193662, g: 0.6415094, b: 0.41999653, a: 0}
+  m_BackGroundColor: {r: 0.10980393, g: 0.5176471, b: 0.27450982, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -473,6 +472,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3686548975181793121, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 9.3029785
+      objectReference: {fileID: 0}
     - target: {fileID: 4823131699789069194, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -640,6 +643,14 @@ PrefabInstance:
     - target: {fileID: 6431268980955856041, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905810959415348148, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.61853
+      objectReference: {fileID: 0}
+    - target: {fileID: 9176689450256722506, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -15.083496
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a4b718d610d4fc43a25de63af7f5237, type: 3}

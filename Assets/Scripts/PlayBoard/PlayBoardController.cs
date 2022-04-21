@@ -348,6 +348,10 @@ namespace Game
                 controller.spinBtn.gameObject.SetActive(true);
                 controller.spinnerParent.gameObject.SetActive(false);
                 controller.blockBetting = false;
+
+                // Reset UI
+                foreach(var e in controller.wagerBoxGUIs)
+                    e.SetBetAmount(0); 
             }
 
             public void Update()

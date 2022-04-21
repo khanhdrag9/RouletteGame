@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
-using Game;
+using Game.Asset;
 
-namespace Game.Asset
+namespace Game
 {
     public class AssetService
     {

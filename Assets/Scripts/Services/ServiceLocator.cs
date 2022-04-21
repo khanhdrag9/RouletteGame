@@ -1,4 +1,4 @@
-namespace Game.Helper
+namespace Game
 {
     using System.Collections.Generic;
     using System;

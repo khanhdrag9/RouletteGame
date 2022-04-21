@@ -13,7 +13,13 @@ namespace Game
 
         public override bool IsRewardAble()
         {
-            return PlayBoardManager.Instance.Result == BetNumber;
+            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+            if(result != null)
+            {
+                return result.Number == BetNumber;
+            }
+
+            return false;
         }
     }
 }

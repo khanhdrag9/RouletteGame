@@ -1,6 +1,4 @@
 using UnityEngine;
-using Game.Helper;
-using Game.Asset;
 
 namespace Game
 {
@@ -10,6 +8,7 @@ namespace Game
         static void Main()
         {
             ServiceLocator.Register<AssetService>(new AssetService());
+            ServiceLocator.Register<BettingHistory>(new BettingHistory());
         }
     }
 }

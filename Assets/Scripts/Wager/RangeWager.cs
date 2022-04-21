@@ -15,8 +15,13 @@ namespace Game
 
         public override bool IsRewardAble()
         {
-            int result = PlayBoardManager.Instance.Result;
-            return From <= result && result <= To;
+            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+            if(result != null)
+            {
+                return From <= result.Number && result.Number <= To;
+            }
+
+            return false;
         }
     }
 }

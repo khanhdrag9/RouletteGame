@@ -13,6 +13,12 @@ namespace Game
 
         public override bool IsRewardAble()
         {
+            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+            if(result != null)
+            {
+                return result.Color == ColorInString;
+            }
+
             return false;
         }
     }

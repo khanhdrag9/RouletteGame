@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.Asset;
 using Game.Helper;
@@ -15,17 +15,21 @@ namespace Game
         [SerializeField] private Button spinBtn;
         [SerializeField] private GameObject circleSpinnerPrefab;
         [SerializeField] private RectTransform spinnerParent;
+        [SerializeField] private TextExtension playerCurrencyTxt;
  
         private PlayBoardManager playBoardManager;
         private Player player => playBoardManager.Player;
         private List<NumberOnBetBoardGUI> wagerBoxGUIs;
         private List<Wager> wagers;
         private ISpinner spinner;
+        private IState state;
 
         private int unit => 1;
 
+
         public void Initialize(BoardData boardData)
         {
+            ChangeState(State.None);
             wagers = new List<Wager>();
             wagerBoxGUIs = new List<NumberOnBetBoardGUI>();
             for(int i = 0; i < boardData.Boxes.Length; i++)
@@ -61,6 +65,12 @@ namespace Game
                 rectTrans.anchoredPosition = data.Position;
                 rectTrans.sizeDelta = data.Size;
             }
+
+        }
+
+        public void Play()
+        {
+            ChangeState(State.Betting);
         }
 
         private void AddWagerHandler(NumberOnBetBoardGUI guiObject, GUIObjectData data)
@@ -228,9 +238,37 @@ namespace Game
             return null;
         }
 
+        private void ChangeState(State newState)
+        {
+            if(state != null) 
+                state.Exit();
+
+            switch(newState)
+            {
+                case State.Betting:
+                    state = new Betting();
+                    break;
+                case State.Spinning:
+                    state = new Spinning();
+                    break;
+                case State.Result:
+                    state = new Result();
+                    break;
+                default:
+                    state = null;
+                    break;
+            }
+
+            if(state != null)
+            {
+                state.controller = this;
+                state.Enter();
+            }
+        }
+        
         private void Spin()
         {
-            spinner.Spin(0);
+            ChangeState(State.Spinning);
         }
 
         void Awake()
@@ -241,7 +279,118 @@ namespace Game
 
         void Update()
         {
-
+            if(state != null) state.Update();
         }
+    
+#region States
+        enum State
+        {
+            None, Betting, Spinning, Result
+        }
+
+        interface IState
+        {
+            PlayBoardController controller {get; set;}
+            void Enter();
+            void Update();
+            void Exit();
+        }
+
+        class Betting : IState
+        {
+            public PlayBoardController controller {get; set;}
+
+            public void Enter()
+            {
+                controller.spinnerParent.gameObject.SetActive(false);
+            }
+
+            public void Update()
+            {
+                controller.playerCurrencyTxt.TextValue = controller.player.CurrencyCount.ToString();
+                controller.playerCurrencyTxt.UpdateVisual();
+            }
+
+            public void Exit()
+            {
+            }
+        }
+
+        class Spinning : IState
+        {
+            public PlayBoardController controller {get; set;}
+
+            private Coroutine handleSpin;
+            private BettingHistory history => ServiceLocator.GetService<BettingHistory>();
+
+            public void Enter()
+            {
+                controller.spinnerParent.gameObject.SetActive(true);
+                handleSpin = controller.StartCoroutine(HandleSpin());
+            }
+
+            public void Update()
+            {
+            }
+
+            public void Exit()
+            {
+                if(handleSpin != null)
+                {
+                    controller.StopCoroutine(handleSpin);
+                }
+            }       
+
+            private IEnumerator HandleSpin()
+            {
+                // Test result
+                BettingResult expectResult = new BettingResult
+                {
+                    Number = 0,
+                    Color = "0,0,0,1"
+                };
+
+                history.Add(expectResult);
+                CheckRewardForPlayer();
+                controller.spinner.Spin(expectResult.Number);
+
+                yield return new WaitForSeconds(3);
+
+                controller.ChangeState(State.Result);
+            } 
+
+            private void CheckRewardForPlayer()
+            {
+                var player = controller.player;
+                var wagers = controller.wagers;
+                foreach(var wager in wagers)
+                {
+                    if(wager.IsRewardAble())
+                    {
+                        wager.Reward(player);
+                    }
+                }
+            }
+        }
+
+        class Result : IState
+        {
+            public PlayBoardController controller {get; set;}
+
+            public void Enter()
+            {
+                controller.playerCurrencyTxt.TextValue = controller.player.CurrencyCount.ToString();
+                controller.playerCurrencyTxt.UpdateVisual();
+            }
+
+            public void Update()
+            {
+            }
+
+            public void Exit()
+            {
+            }
+        }
+        #endregion
     }
 }

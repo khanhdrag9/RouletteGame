@@ -25,6 +25,7 @@ namespace Design
             var guiObjects = GetComponentsInChildren<GuiDesignObject>(true);
             var boxes = new GUIObjectData[guiObjects.Length];
             var cacheParents = new Transform[guiObjects.Length];
+            SpinnerDesign cacheSpinnerDesign = null;
             for(int i = 0; i < guiObjects.Length; i++)
             {
                 var guiObject = guiObjects[i];
@@ -84,7 +85,7 @@ namespace Design
                         break;
                     
                     case GUIObjectType.CircleSpinner:
-                        strParam = Extensions.IntArrayToString((guiObject as SpinnerDesign).Order);
+                        cacheSpinnerDesign = guiObject as SpinnerDesign;
                         break;
                 }
 
@@ -120,12 +121,36 @@ namespace Design
                 };
             }
 
+            // Create Spinner Data
+            SpinnerConfig spinnerConfig = new SpinnerConfig();
+            if(cacheSpinnerDesign)
+            {
+                var order = cacheSpinnerDesign.Order;
+                var colors = cacheSpinnerDesign.Colors;
+                var sprites = cacheSpinnerDesign.Sprites;
+                spinnerConfig.Items = new SpinnerItem[order.Length];
+
+                for(int i = 0; i < cacheSpinnerDesign.Order.Length; i++)
+                {
+                    int number = order[i];
+                    string color = i < colors.Length ? Extensions.ColorToString(colors[i]) : "";
+                    string sprite = i < sprites.Length ? sprites[i].name : "";
+
+                    spinnerConfig.Items[i] = new SpinnerItem
+                    {
+                        Number = number,
+                        Color = color,
+                        Sprite = sprite
+                    };
+                }
+            }
 
             Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
             var boardData = new BoardData
             {
                 DesignResolution = resolution,
-                Boxes = boxes
+                Boxes = boxes,
+                SpinnerConfig = spinnerConfig
             };
 
             // Write Json file

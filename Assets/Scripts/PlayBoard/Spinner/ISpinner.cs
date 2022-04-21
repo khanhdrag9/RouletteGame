@@ -1,3 +1,4 @@
+using Game.Asset;
 using UnityEngine;
 
 namespace Game
@@ -6,7 +7,7 @@ namespace Game
     {
         GameObject GameObject {get;}
         bool IsSpinning {get;}
-        void Initialize(int[] orderOfNumer);
+        void Initialize(SpinnerConfig config);
         void Spin(int expectResult);
     }
 }

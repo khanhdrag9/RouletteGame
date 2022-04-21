@@ -7,5 +7,7 @@ namespace Design
     public class SpinnerDesign : GuiDesignObject
     {
         [SerializeField] public int[] Order;
+        [SerializeField] public Color[] Colors;
+        [SerializeField] public Sprite[] Sprites;
     }
 }

@@ -60,7 +60,6 @@ namespace Game
 
                     if(spinner != null) Destroy(spinner.GameObject);
                     spinner = obj.GetComponent<ISpinner>();
-                    spinner.Initialize(Extensions.StringToIntArray(data.StrParam));
                 }
 
                 // Wagers
@@ -80,6 +79,11 @@ namespace Game
                 var rectTrans = obj.transform as RectTransform;
                 rectTrans.anchoredPosition = data.Position;
                 rectTrans.sizeDelta = data.Size;
+            }
+
+            if(spinner != null)
+            {
+                spinner.Initialize(boardData.SpinnerConfig);
             }
 
         }

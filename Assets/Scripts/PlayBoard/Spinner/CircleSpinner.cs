@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Game.Asset;
+using Game.Helper;
 
 namespace Game
 {
@@ -22,7 +24,7 @@ namespace Game
         [SerializeField][Tooltip("Minimum spin duration")] private float minSpinDuration  = 5f;
         [SerializeField][Tooltip("Maximum spin duration")] private float maxSpinDuration  = 7f;
 
-        private int[] orderOfNumber;
+        private SpinnerConfig config;
         private int randomFullRotationTime => UnityEngine.Random.Range(minRotationTime, maxRotationTime + 1);
         private float randomSpinDuration => UnityEngine.Random.Range(minSpinDuration, maxSpinDuration);
         private int numberItem;
@@ -41,10 +43,10 @@ namespace Game
         /// Design data of a gameplay
         /// <param name="orderOfNumber">clockwise order of numbers</param>
         /// </summary>
-        public void Initialize(int[] orderOfNumber)
+        public void Initialize(SpinnerConfig config)
         {
             StopAllCoroutines();
-            numberItem = orderOfNumber.Length;
+            numberItem = config.Items.Length;
             IsSpinning = false;
             anglePerItem = 360f / numberItem;
             angle = 0;
@@ -53,6 +55,7 @@ namespace Game
             for(int i = 0; i < numberItem; i++)
             {
                 var element = Instantiate(spinnerItemPrefab, spinnerItemGroup);
+                var itemData = config.Items[i];
 
                 // Adjust anchor
                 var rectTran = element.transform as RectTransform;
@@ -61,18 +64,18 @@ namespace Game
 
                 // Adjust rotation
                 var eImage = element.GetComponent<Image>();
-                eImage.color = i % 2 == 0 ? Color.red : Color.black;
+                eImage.color = Extensions.StringToColor(itemData.Color);
                 eImage.fillAmount = 1f / numberItem;
                 eImage.rectTransform.localRotation = Quaternion.Euler(0, 0, (-i + 0.5f) * anglePerItem);
                 eImage.rectTransform.sizeDelta = spinnerItemGroup.sizeDelta;
 
                 // Adjust position of number text in each element
                 var eText = element.GetComponentInChildren<Text>();
-                eText.text = orderOfNumber[i].ToString();
+                eText.text = itemData.Number.ToString();
                 eText.rectTransform.localRotation = Quaternion.Euler(0, 0, -180f / numberItem);
             }
             
-            this.orderOfNumber = orderOfNumber;
+            this.config = config;
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace Game
         public void Spin(int expectResult)
         {
             // Get Index of expect result
-            int indexOfExpectResult = Array.FindIndex(orderOfNumber, e => e == expectResult);
+            int indexOfExpectResult = Array.FindIndex(config.Items, e => e.Number == expectResult);
 
             // Start Spin here
             StartCoroutine(HandleSpin(indexOfExpectResult));

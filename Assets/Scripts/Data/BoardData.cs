@@ -19,6 +19,7 @@ namespace Game.Asset
         /// Array data of objects which is used to place wager
         /// </summary>
         public GUIObjectData[] Boxes;
+        public SpinnerConfig SpinnerConfig;
     }
 
     /// <summary>
@@ -58,5 +59,22 @@ namespace Game.Asset
         /// String parameter, used for multi purposes
         /// </summary>
         public string StrParam;
+    }
+
+    /// <summary>
+    /// Data used to create UI object which help player to place wager
+    /// </summary>
+    [System.Serializable]
+    public class SpinnerConfig
+    {
+        public SpinnerItem[] Items;
+    }
+
+    [System.Serializable]
+    public class SpinnerItem
+    {
+        public int Number;
+        public string Color;
+        public string Sprite;
     }
 }

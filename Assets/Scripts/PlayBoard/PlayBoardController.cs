@@ -371,7 +371,7 @@ namespace Game
                 // Test result
                 BettingResult expectResult = new BettingResult
                 {
-                    Number = 0,
+                    Number = 10,
                     Color = "0,0,0,1"
                 };
 

@@ -109,7 +109,7 @@ namespace Game
             {
                 if(blockBetting) return;
 
-                float bonusRate = 1.5f;
+                float bonusRate = data.FloatParam;
                 WagerType wagerType = Extensions.StringToEnum<WagerType>(data.Name);
                 Wager wager = null;
 

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Design
 {
-    public class ColorWagerGuiDesign : WagerDesign
+    public class WagerDesign : GuiDesignObject
     {
-        [SerializeField] public Color color;
+        [SerializeField] public float bonusRate;
     }
 }

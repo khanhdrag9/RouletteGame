@@ -68,6 +68,11 @@ namespace Design
                         break;
                 }
 
+                // Float param
+                float floatParam = 0f;
+                if(guiObject is WagerDesign)
+                    floatParam = (guiObject as WagerDesign).bonusRate;
+
                 // Express logic in string
                 string strParam = "";
                 switch(guiObject.Type)
@@ -117,6 +122,7 @@ namespace Design
                     Size = size,
                     Color = colorStr,
                     VisualText = visualText,
+                    FloatParam = floatParam,
                     StrParam = strParam
                 };
             }

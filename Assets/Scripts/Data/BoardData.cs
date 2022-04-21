@@ -56,6 +56,11 @@ namespace Game.Asset
         public string VisualText;
 
         /// <summary>
+        /// float parameter, used for multi purposes like bonusRate for wager design
+        /// </summary>
+        public float FloatParam;
+
+        /// <summary>
         /// String parameter, used for multi purposes
         /// </summary>
         public string StrParam;

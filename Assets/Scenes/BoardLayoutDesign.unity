@@ -1020,7 +1020,7 @@ GameObject:
   - component: {fileID: 527712385}
   - component: {fileID: 527712386}
   m_Layer: 0
-  m_Name: Design
+  m_Name: Design - Mode 20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1053,6 +1053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cde72dad01abc44b83000ebaf587df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gamePlayName: Mode 20 number
   test: {fileID: 1272329044}
   numberBoxPrefab: {fileID: 2089725271811313483, guid: 412823003dfc38a4db2a426b3f7d6161, type: 3}
   templateTransform: {fileID: 1887590372}

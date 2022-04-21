@@ -11,12 +11,13 @@ namespace Design
 {
     public class BoardLayoutDesigner : MonoBehaviour
     {
+        [SerializeField] private string gamePlayName;
         [SerializeField] private Transform test;
         [SerializeField] private GameObject numberBoxPrefab;
         [SerializeField] private RectTransform templateTransform;
 
 #if UNITY_EDITOR
-        string jsonPath => Application.dataPath + "/Resources/ListBoardData/boardData.json";
+        string jsonPath => Application.dataPath + $"/Resources/ListBoardData/{gamePlayName}.json";
 
         [ContextMenu("Generate Json")]
         void GenerateJson()
@@ -154,6 +155,7 @@ namespace Design
             Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
             var boardData = new BoardData
             {
+                Name = gamePlayName,
                 DesignResolution = resolution,
                 Boxes = boxes,
                 SpinnerConfig = spinnerConfig

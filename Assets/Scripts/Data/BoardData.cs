@@ -11,6 +11,11 @@ namespace Game.Asset
     public class BoardData
     {
         /// <summary>
+        /// Game play name
+        /// </summary>
+        public string Name;
+
+        /// <summary>
         /// gameplay is designed based on this resolution
         /// </summary>
         public Vector2 DesignResolution;

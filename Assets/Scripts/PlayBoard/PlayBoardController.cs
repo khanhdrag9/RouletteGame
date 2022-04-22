@@ -215,6 +215,8 @@ namespace Game
         {
             int withdrawAmount = wager.BetAmount < betAmount ? wager.BetAmount : betAmount;
             wager.BetAmount -= withdrawAmount;
+            if(wager.BetAmount == 0)
+                wagers.Remove(wager);
             player.Withdraw(withdrawAmount);
             guiObject.SetBetAmount(wager.BetAmount);
         }
@@ -388,7 +390,6 @@ namespace Game
             public int LastesReward {get; private set;}
 
             private Coroutine handleSpin;
-            private BettingHistory history => ServiceLocator.GetService<BettingHistory>();
 
             public void Enter()
             {
@@ -412,16 +413,22 @@ namespace Game
 
             private IEnumerator HandleSpin()
             {
-                // Test result
-                BettingResult expectResult = new BettingResult
+                // Send request to server
+                var serverService = ServiceLocator.GetService<ServerService>();
+                var request = serverService.SendWagersToServer(controller.wagers.ToArray());
+                yield return request;
+
+                // Handle response
+                var resultParams = request.Response.Result.Split(';'); 
+                var result = new BettingResult
                 {
-                    Number = 10,
-                    Color = "0,0,0,1"
+                    Number = int.Parse(resultParams[0]),
+                    Color = resultParams[1]
                 };
 
-                history.Add(expectResult);
+                ServiceLocator.GetService<BettingHistory>().Add(result);
                 CheckRewardForPlayer();
-                controller.spinner.Spin(expectResult.Number);
+                controller.spinner.Spin(result.Number);
 
                 yield return new WaitUntil(()=>!controller.spinner.IsSpinning);
                 yield return new WaitForSeconds(1f);

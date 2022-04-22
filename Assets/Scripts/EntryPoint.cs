@@ -9,6 +9,7 @@ namespace Game
         {
             ServiceLocator.Register<AssetService>(new AssetService());
             ServiceLocator.Register<BettingHistory>(new BettingHistory());
+            ServiceLocator.Register<ServerService>(new ServerService());
         }
     }
 }

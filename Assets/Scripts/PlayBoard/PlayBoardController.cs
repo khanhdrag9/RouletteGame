@@ -415,11 +415,11 @@ namespace Game
             {
                 // Send request to server
                 var serverService = ServiceLocator.GetService<ServerService>();
-                var request = serverService.SendWagersToServer(controller.wagers.ToArray());
+                var request = new ServerService.WagerRequest(controller.wagers.ToArray());
                 yield return request;
 
                 // Handle response
-                var resultParams = request.Response.Result.Split(';'); 
+                var resultParams = request.Response.Split(';');
                 var result = new BettingResult
                 {
                     Number = int.Parse(resultParams[0]),

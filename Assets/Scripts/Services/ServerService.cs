@@ -2,19 +2,31 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Linq;
+using Game.Asset;
 
 namespace Game
 {
     public class ServerService
     {
-        public WagerRequest SendWagersToServer(Wager[] wagers)
+        public class BoardDataRequest : CustomYieldInstruction
         {
-            return new WagerRequest(wagers);
+            public string Response {get; private set;}
+            public override bool keepWaiting => Time.unscaledTime > time;
+            private float time;
+            
+            public BoardDataRequest()
+            {
+                // Request server to get here...
+
+                // I use ServerMockup for demo purpose
+                time = Time.unscaledTime + 1f;  // Delay 1f
+                Response = new ServerMockup().ReceiveRequest(UnityWebRequest.kHttpVerbGET, "board/datas", null);
+            }
         }
 
         public class WagerRequest : CustomYieldInstruction
         {
-            public WagerResponse Response {get; private set;}
+            public string Response {get; private set;}
             public override bool keepWaiting => inProgress;
 
             private bool inProgress = false;
@@ -50,10 +62,10 @@ namespace Game
                 int randomIndex = Random.Range(0, singleWagers.ToArray().Length);
                 var resultItem = singleWagers[randomIndex];
 
-                Response = new WagerResponse
-                {
-                    Result = $"{resultItem.StrParam};{resultItem.Color}"
-                };
+                // Response = new WagerResponse
+                // {
+                //     Result = $"{resultItem.StrParam};{resultItem.Color}"
+                // };
 
                 inProgress = false;
             }
@@ -61,21 +73,21 @@ namespace Game
 
 
         [System.Serializable]
-        public class WagerRequestData
+        class WagerRequestData
         {
             public string GameMode;
             public WagerData[] wagers;
         }
 
         [System.Serializable]
-        public class WagerData
+        class WagerData
         {
             public string WagerType;
             public int BetAmount;
         }
 
         [System.Serializable]
-        public class WagerResponse
+        class WagerResponse
         {
             public string Result;
         }

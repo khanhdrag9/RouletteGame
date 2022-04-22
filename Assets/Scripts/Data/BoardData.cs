@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Game.Asset
 {
+    [System.Serializable]
+    public class ListBoardData
+    {
+        public BoardData[] Value;
+    }
+
     /// <summary>
     /// Design data of a gameplay
     /// </summary>

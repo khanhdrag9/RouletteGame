@@ -1,6 +1,8 @@
 using Game.Helper;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using Game.Asset;
 
 namespace Game.MainMenu
 {
@@ -11,10 +13,25 @@ namespace Game.MainMenu
 
         private void Start()
         {
-            var boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
-            for(int i = 0; i < boardDatas.Length; i++)
+            StartCoroutine(Initialize());
+        }
+
+        private IEnumerator Initialize()
+        {
+            var boardDataRequest = new ServerService.BoardDataRequest();
+            yield return boardDataRequest;
+
+            string jsonData = boardDataRequest.Response;
+            if(string.IsNullOrEmpty(jsonData))
             {
-                var data = boardDatas[i];
+                Debug.LogError("Couldn't get any board data/game mode from server");
+                yield break;
+            }
+
+            var boardDatas = JsonUtility.FromJson<ListBoardData>(jsonData);
+            for(int i = 0; i < boardDatas.Value.Length; i++)
+            {
+                var data = boardDatas.Value[i];
                 var btn = Instantiate(goGameModeBtnPrefab, group);
                 btn.gameObject.SetActive(true);
                 btn.GetComponentInChildren<Text>().text = data.Name;
@@ -22,7 +39,7 @@ namespace Game.MainMenu
                 {   
                     Global.BoardData = data;
                 });
-            }
+            }    
         }
     }
 }

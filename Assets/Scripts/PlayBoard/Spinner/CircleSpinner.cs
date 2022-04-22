@@ -54,25 +54,32 @@ namespace Game
 
             for(int i = 0; i < numberItem; i++)
             {
-                var element = Instantiate(spinnerItemPrefab, spinnerItemGroup);
+                var item = Instantiate(spinnerItemPrefab, spinnerItemGroup);
                 var itemData = config.Items[i];
+                var spinnerGui = item.GetComponent<SpinnerItemGUI>();
 
                 // Adjust anchor
-                var rectTran = element.transform as RectTransform;
+                var rectTran = item.transform as RectTransform;
                 rectTran.anchorMin = new Vector2(0, 0);
                 rectTran.anchorMax = new Vector2(1, 1);
 
-                // Adjust rotation
-                var eImage = element.GetComponent<Image>();
+                // Adjust background
+                var eImage = spinnerGui.Background;
                 eImage.color = Extensions.StringToColor(itemData.Color);
                 eImage.fillAmount = 1f / numberItem;
                 eImage.rectTransform.localRotation = Quaternion.Euler(0, 0, (-i + 0.5f) * anglePerItem);
                 eImage.rectTransform.sizeDelta = spinnerItemGroup.sizeDelta;
 
-                // Adjust position of number text in each element
-                var eText = element.GetComponentInChildren<Text>();
+                // Adjust position of number text in each item
+                var eText = spinnerGui.Text;
                 eText.text = itemData.Number.ToString();
                 eText.rectTransform.localRotation = Quaternion.Euler(0, 0, -180f / numberItem);
+
+                // Adjust position of icon in each item
+                var icon = spinnerGui.Icon;
+                icon.sprite = ServiceLocator.GetService<AssetService>().GetSprite(itemData.Sprite);
+                icon.transform.parent.localRotation = Quaternion.Euler(0, 0, -180f / numberItem);
+                icon.gameObject.SetActive(icon.sprite != null);
             }
             
             this.config = config;

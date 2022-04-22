@@ -46,4 +46,12 @@ namespace Game.Helper
             return result; 
         }
     }
+
+    public static class AssetConverter
+    {
+        public static string SpriteToString(Sprite sprite)
+        {
+            return sprite.name;
+        }
+    }
 }

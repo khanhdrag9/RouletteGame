@@ -6,6 +6,6 @@ namespace Design
 {
     public class WagerDesign : GuiDesignObject
     {
-        [SerializeField] public float bonusRate;
+        [SerializeField] public float BonusRate;
     }
 }

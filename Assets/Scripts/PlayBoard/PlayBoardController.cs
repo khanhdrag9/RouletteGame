@@ -78,7 +78,19 @@ namespace Game
 
                     var guiObject = obj.GetComponent<NumberOnBetBoardGUI>();
                     guiObject.Background.color = Extensions.StringToColor(data.Color);
-                    guiObject.Text.text = data.VisualText;
+
+                    var sprite = ServiceLocator.GetService<AssetService>().GetSprite(data.Sprite);
+                    if(sprite) 
+                    {
+                        guiObject.Background.sprite = sprite;
+                        guiObject.Text.gameObject.SetActive(false);
+                    } 
+                    else 
+                    {
+                        guiObject.Text.text = data.VisualText;
+                        guiObject.Text.gameObject.SetActive(true);
+                    }
+
                     AddWagerHandler(guiObject, data);
                     guiObject.SetBetAmount(0);
 

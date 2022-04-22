@@ -10,6 +10,11 @@ namespace Game
         {
             return assetLoader.GetBoardDatas();
         }
+
+        public Sprite GetSprite(string defineName)
+        {
+            return assetLoader.GetAsset<Sprite>("Sprites/"+defineName);
+        }
     }
 
 
@@ -17,12 +22,13 @@ namespace Game
     interface IAssetLoader
     {
         BoardData[] GetBoardDatas();
+        public T GetAsset<T>(string defineName) where T : Object;
     }
 
     class LocalResourcesLoader : IAssetLoader
     {
         const string StorageFolder = "ListBoardData";
-        
+
         public BoardData[] GetBoardDatas()
         {
             var jsonAssets = Resources.LoadAll<TextAsset>(StorageFolder);
@@ -34,6 +40,12 @@ namespace Game
             }
 
             return result;
+        }
+
+        public T GetAsset<T>(string defineName) where T : Object
+        {
+            var asset = Resources.Load<T>(defineName);
+            return asset;
         }
     }
 

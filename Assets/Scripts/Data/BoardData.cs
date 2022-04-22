@@ -61,6 +61,11 @@ namespace Game.Asset
         public string VisualText;
 
         /// <summary>
+        /// Sprite is used in Image component
+        /// </summary>
+        public string Sprite;
+
+        /// <summary>
         /// float parameter, used for multi purposes like bonusRate for wager design
         /// </summary>
         public float FloatParam;

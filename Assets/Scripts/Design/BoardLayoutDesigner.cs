@@ -37,7 +37,14 @@ namespace Design
                 Vector2 size = rectTrans.sizeDelta;
 
                 string colorStr = "";
-                if(image) colorStr = Extensions.ColorToString(image.color);
+                string sprite = "";
+                if(image)
+                {
+                    colorStr = Extensions.ColorToString(image.color);
+
+                    if(image.sprite)
+                        sprite = AssetConverter.SpriteToString(image.sprite);
+                } 
 
                 string visualText = "";
                 if(text) visualText = text.text;
@@ -72,7 +79,7 @@ namespace Design
                 // Float param
                 float floatParam = 0f;
                 if(guiObject is WagerDesign)
-                    floatParam = (guiObject as WagerDesign).bonusRate;
+                    floatParam = (guiObject as WagerDesign).BonusRate;
 
                 // Express logic in string
                 string strParam = "";
@@ -123,6 +130,7 @@ namespace Design
                     Size = size,
                     Color = colorStr,
                     VisualText = visualText,
+                    Sprite = sprite,
                     FloatParam = floatParam,
                     StrParam = strParam
                 };
@@ -140,8 +148,8 @@ namespace Design
                 for(int i = 0; i < cacheSpinnerDesign.Order.Length; i++)
                 {
                     int number = order[i];
+                    string sprite = i < sprites.Length ? AssetConverter.SpriteToString(sprites[i]) : "";
                     string color = i < colors.Length ? Extensions.ColorToString(colors[i]) : "";
-                    string sprite = i < sprites.Length ? sprites[i].name : "";
 
                     spinnerConfig.Items[i] = new SpinnerItem
                     {
@@ -191,6 +199,8 @@ namespace Design
                 box.GetComponentInChildren<Text>().text = data.VisualText;
             }
         }
+
+
 #endif
 
     }

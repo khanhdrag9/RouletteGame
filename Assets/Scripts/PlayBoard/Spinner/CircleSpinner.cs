@@ -50,7 +50,6 @@ namespace Game
             IsSpinning = false;
             anglePerItem = 360f / numberItem;
             angle = 0;
-            float defaultWeight = 100f / numberItem;
 
             for(int i = 0; i < numberItem; i++)
             {
@@ -58,12 +57,12 @@ namespace Game
                 var itemData = config.Items[i];
                 var spinnerGui = item.GetComponent<SpinnerItemGUI>();
 
-                // Adjust anchor
+                // Adjust anchor - item auto fit with size of spinner
                 var rectTran = item.transform as RectTransform;
                 rectTran.anchorMin = new Vector2(0, 0);
                 rectTran.anchorMax = new Vector2(1, 1);
 
-                // Adjust background
+                // Adjust background, use circle fillAmount to make element on a circle wheel
                 var eImage = spinnerGui.Background;
                 eImage.color = Extensions.StringToColor(itemData.Color);
                 eImage.fillAmount = 1f / numberItem;
@@ -87,7 +86,7 @@ namespace Game
 
         /// <summary>
         /// Start spinning
-        /// <param name="expectResult">the result of spin</param>
+        /// <param name="expectResult"></param>
         /// </summary>
         public void Spin(int expectResult)
         {
@@ -107,11 +106,11 @@ namespace Game
             while (currentAngle >= 360) currentAngle -= 360;
             while (currentAngle <= -360) currentAngle += 360;
 
-            Debug.Log("Spin to " + toIndex);
+            Debug.Log("Spin to index " + toIndex);
 
             int fullRotation = randomFullRotationTime;
 
-            // Get angle when spin clockwise
+            // Get angle when spin clockwise, anglePerItem / 20f is padding amount
             float half = anglePerItem / 2f - anglePerItem / 20f;
             float targetAngle = -(itemNumberAngle + 360f * fullRotation) + UnityEngine.Random.Range(-half, half);
 

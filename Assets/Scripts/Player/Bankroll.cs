@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Game
 {
+    // Player currency should be saved on the server/datebase
+    // Bankroll will be used to send request get/update currency of player
+    // For now, We will handle locally for Demo
     public class Bankroll
     {
         private List<Currency> currencies;
@@ -14,7 +17,7 @@ namespace Game
         {
             currencies = new List<Currency>();
             
-            // Test
+            // Start with 1000
             Receive(1000);
         }
 

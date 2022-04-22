@@ -40,12 +40,12 @@ namespace Game
             var requestData = new WagerRequestData
             {
                 GameMode = Global.BoardData.Name,
-                wagers = new WagerData[wagers.Length]
+                Wagers = new WagerData[wagers.Length]
             };
             
             for(int i = 0; i < wagers.Length; i++)
             {
-                requestData.wagers[i] = new WagerData
+                requestData.Wagers[i] = new WagerData
                 {
                     WagerType = wagers[i].WagerType.ToString(),
                     StrParam = wagers[i].RawStrParam,
@@ -65,11 +65,12 @@ namespace Game
     }
 
 #endregion
+
     [System.Serializable]
     public class WagerRequestData
     {
         public string GameMode;
-        public WagerData[] wagers;
+        public WagerData[] Wagers;
     }
 
     [System.Serializable]

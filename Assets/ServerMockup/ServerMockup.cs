@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
-/// This class only for testing, it is not real server!
+/// This class only for testing/demo, it is not real server!
 /// </summary>
 public class ServerMockup
 {
@@ -53,7 +53,7 @@ public class ServerMockup
                 };
                 var requestObj = JsonUtility.FromJson<WagerRequestData>(data);
                 var board = boardDatas.First(e => e.Name == requestObj.GameMode);
-                foreach(var wager in requestObj.wagers)
+                foreach(var wager in requestObj.Wagers)
                 {
                     bool isReward = false;
                     if (wager.WagerType == WagerType.Range.ToString())

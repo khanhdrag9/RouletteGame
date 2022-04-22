@@ -80,6 +80,7 @@ namespace Game
                     guiObject.Background.color = Extensions.StringToColor(data.Color);
 
                     var sprite = ServiceLocator.GetService<AssetService>().GetSprite(data.Sprite);
+                    // Use sprite or text
                     if(sprite) 
                     {
                         guiObject.Background.sprite = sprite;
@@ -130,7 +131,7 @@ namespace Game
                     case WagerType.Single:
                         int betNumber = int.Parse(data.StrParam);
 
-                        // Find single wager has same bet number
+                        // Find single wager has same bet number to stack bet amount
                         wager = GetSingleWager(betNumber);
                         if(wager == null)
                         {
@@ -141,11 +142,11 @@ namespace Game
                         break;
 
                     case WagerType.Range:
-                        var p = data.StrParam.Split('-');  // expect logic is [from]-[to], example: 1-10
+                        var p = data.StrParam.Split('-');  // format logic is [from]-[to], example: 1-10
                         int from = int.Parse(p[0]);
                         int to = int.Parse(p[1]);
 
-                        // Find wager has same range
+                        // Find wager has same range to stack bet amount
                         wager = GetRangeWager(from, to);
                         if(wager == null)
                         {
@@ -156,7 +157,7 @@ namespace Game
                         break;
 
                     case WagerType.Odd:
-                        // Find wager has exist
+                        // Find wager has exist to stack bet amount
                         wager = GetOddWager();
                         if(wager == null)
                         {
@@ -167,7 +168,7 @@ namespace Game
                         break;
 
                     case WagerType.Even:
-                        // Find wager has exist
+                        // Find wager has exist to stack bet amount
                         wager = GetEvenWager();
                         if(wager == null)
                         {
@@ -178,9 +179,9 @@ namespace Game
                         break;
 
                     case WagerType.Color:
-                        string colorStr = data.StrParam;
+                        string colorStr = data.StrParam;    // String value format is from Extensions.ColorToString()
 
-                        // Find wager has same color
+                        // Find wager has same color to stack bet amount
                         wager = GetColorWager(colorStr);
                         if(wager == null)
                         {
@@ -190,11 +191,14 @@ namespace Game
 
                         break;
                 }
+
+                wager.RawStrParam = data.StrParam;
                 
+                // Left mouse to add
+                // Right mouse to withdraw
                 bool isAddCurrency = eventData.button == PointerEventData.InputButton.Left;
                 bool isWithdrawCurrency = eventData.button == PointerEventData.InputButton.Right;
 
-                wager.RawStrParam = data.StrParam;
                 if(isAddCurrency) AddCurrencyToWager(wager, guiObject);
                 if(isWithdrawCurrency) WithdrawCurrencyFromWager(wager, guiObject);
             });
@@ -340,12 +344,12 @@ namespace Game
         private static Spinning spinningState = new Spinning();
         private static Result resultState = new Result();
 
-        enum State
+        private enum State
         {
             None, Betting, Spinning, Result
         }
 
-        interface IState
+        private interface IState
         {
             PlayBoardController controller {get; set;}
             void Enter();
@@ -353,7 +357,7 @@ namespace Game
             void Exit();
         }
 
-        class Betting : IState
+        private class Betting : IState
         {
             public PlayBoardController controller {get; set;}
             public int LastestTotalBetAmount {get; private set;}
@@ -385,7 +389,7 @@ namespace Game
             }
         }
 
-        class Spinning : IState
+        private class Spinning : IState
         {
             public PlayBoardController controller {get; set;}
             public int LastesReward {get; private set;}
@@ -420,24 +424,19 @@ namespace Game
                 yield return request;
 
                 // Handle response
-                var result = JsonUtility.FromJson<WagerResponse>(request.Response);
-                controller.player.Reward(result.RewardAmount);
-                LastesReward = result.RewardAmount;
+                var response = JsonUtility.FromJson<WagerResponse>(request.Response);
+                controller.player.Reward(response.RewardAmount);
+                LastesReward = response.RewardAmount;
 
                 // ServiceLocator.GetService<BettingHistory>().Add();
 
-                controller.spinner.Spin(result.Result);
+                controller.spinner.Spin(response.Result);
 
                 yield return new WaitUntil(()=>!controller.spinner.IsSpinning);
                 yield return new WaitForSeconds(1f);
 
                 controller.ChangeState(State.Result);
             } 
-
-            private void CheckRewardForPlayer()
-            {
-
-            }
         }
 
         class Result : IState

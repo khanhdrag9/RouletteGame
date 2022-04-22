@@ -8,6 +8,7 @@ namespace Game.MainMenu
 {
     public class MainMenu : MonoBehaviour
     {
+        [SerializeField] private GameObject loadingTxt;
         [SerializeField] private RectTransform group;
         [SerializeField] private Button goGameModeBtnPrefab;
 
@@ -18,6 +19,7 @@ namespace Game.MainMenu
 
         private IEnumerator Initialize()
         {
+            loadingTxt.SetActive(true);
             var boardDataRequest = new BoardDataRequest();
             yield return boardDataRequest;
 
@@ -40,6 +42,7 @@ namespace Game.MainMenu
                     Global.BoardData = data;
                 });
             }    
+            loadingTxt.SetActive(false);
         }
     }
 }

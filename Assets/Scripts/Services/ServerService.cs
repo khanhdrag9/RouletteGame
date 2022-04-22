@@ -8,7 +8,7 @@ namespace Game
     public class BoardDataRequest : CustomYieldInstruction
     {
         public string Response {get; private set;}
-        public override bool keepWaiting => Time.unscaledTime < time || inProgress;
+        public override bool keepWaiting => Time.time < time || inProgress;
         private bool inProgress = true;
         private float time;
         
@@ -18,7 +18,7 @@ namespace Game
             // Request server to get here...
 
             // I use ServerMockup for demo purpose
-            time = Time.unscaledTime + 1f;  // Delay 1f
+            time = Time.time + 3f;  // Delay 3f
             Response = new ServerMockup().ReceiveRequest(UnityWebRequest.kHttpVerbGET, "board/datas", null);
 
             inProgress = false;

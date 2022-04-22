@@ -44,7 +44,7 @@ public class ServerMockup
                 int randomIndex = Random.Range(0, singleWagers.Length);
                 strParam = singleWagers[randomIndex].StrParam;
                 // If want to control result, set strParam to number you expect
-                strParam = "10";    // result is 10, 10 is NUMBER that player bet in, even the icons also are assigned to 1 number  
+                // strParam = "10";    // result is 10, 10 is NUMBER that player bet in, even the icons also are assigned to 1 number  
 
                 var responseObject = new WagerResponse
                 {

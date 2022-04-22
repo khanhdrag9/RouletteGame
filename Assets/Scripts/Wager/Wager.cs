@@ -37,7 +37,8 @@ namespace Game
             this.BonusRate = bonusRate;
         }
         
-        public abstract bool IsRewardAble();
+        // Handle reward locally
+        // public abstract bool IsRewardAble();
         public virtual void Reward(Player player)
         {
             reward = (int)(BetAmount * BonusRate);

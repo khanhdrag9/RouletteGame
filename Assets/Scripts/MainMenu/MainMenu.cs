@@ -18,7 +18,7 @@ namespace Game.MainMenu
 
         private IEnumerator Initialize()
         {
-            var boardDataRequest = new ServerService.BoardDataRequest();
+            var boardDataRequest = new BoardDataRequest();
             yield return boardDataRequest;
 
             string jsonData = boardDataRequest.Response;

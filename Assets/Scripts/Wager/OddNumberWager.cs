@@ -8,15 +8,16 @@ namespace Game
         {
         }
 
-        public override bool IsRewardAble()
-        {
-            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
-            if(result != null)
-            {
-                return result.Number % 2 == 1;
-            }
+        // Handle reward locally
+        // public override bool IsRewardAble()
+        // {
+        //     var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+        //     if(result != null)
+        //     {
+        //         return result.Number % 2 == 1;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
     }
 }

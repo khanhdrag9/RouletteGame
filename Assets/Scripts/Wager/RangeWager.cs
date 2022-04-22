@@ -13,15 +13,16 @@ namespace Game
             this.To = to;
         }
 
-        public override bool IsRewardAble()
-        {
-            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
-            if(result != null)
-            {
-                return From <= result.Number && result.Number <= To;
-            }
+        // Handle reward locally
+        // public override bool IsRewardAble()
+        // {
+        //     var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+        //     if(result != null)
+        //     {
+        //         return From <= result.Number && result.Number <= To;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
     }
 }

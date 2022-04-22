@@ -11,15 +11,16 @@ namespace Game
             this.ColorInString = colorStr;
         }
 
-        public override bool IsRewardAble()
-        {
-            var result = ServiceLocator.GetService<BettingHistory>().GetLast();
-            if(result != null)
-            {
-                return result.Color == ColorInString;
-            }
+        // Handle reward locally
+        // public override bool IsRewardAble()
+        // {
+        //     var result = ServiceLocator.GetService<BettingHistory>().GetLast();
+        //     if(result != null)
+        //     {
+        //         return result.Color == ColorInString;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
     }
 }

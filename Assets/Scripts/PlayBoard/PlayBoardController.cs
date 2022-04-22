@@ -414,21 +414,18 @@ namespace Game
             private IEnumerator HandleSpin()
             {
                 // Send request to server
-                var serverService = ServiceLocator.GetService<ServerService>();
-                var request = new ServerService.WagerRequest(controller.wagers.ToArray());
+                var request = new WagerRequest(controller.wagers.ToArray());
+                controller.wagers.Clear();
                 yield return request;
 
                 // Handle response
-                var resultParams = request.Response.Split(';');
-                var result = new BettingResult
-                {
-                    Number = int.Parse(resultParams[0]),
-                    Color = resultParams[1]
-                };
+                var result = JsonUtility.FromJson<WagerResponse>(request.Response);
+                controller.player.Reward(result.RewardAmount);
+                LastesReward = result.RewardAmount;
 
-                ServiceLocator.GetService<BettingHistory>().Add(result);
-                CheckRewardForPlayer();
-                controller.spinner.Spin(result.Number);
+                // ServiceLocator.GetService<BettingHistory>().Add();
+
+                controller.spinner.Spin(result.Result);
 
                 yield return new WaitUntil(()=>!controller.spinner.IsSpinning);
                 yield return new WaitForSeconds(1f);
@@ -438,21 +435,7 @@ namespace Game
 
             private void CheckRewardForPlayer()
             {
-                var player = controller.player;
-                var wagers = controller.wagers;
-                int cachePlayerCurrency = player.CurrencyCount;
 
-                foreach(var wager in wagers)
-                {
-                    if(wager.IsRewardAble())
-                    {
-                        wager.Reward(player);
-                    }
-                }
-
-                LastesReward = player.CurrencyCount - cachePlayerCurrency;
-
-                wagers.Clear();
             }
         }
 

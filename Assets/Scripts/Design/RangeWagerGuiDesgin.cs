@@ -8,5 +8,7 @@ namespace Design
     {
         [SerializeField] public int From;
         [SerializeField] public int To;
+        public override string LogicInStr => $"{From}-{To}";
+        
     }
 }

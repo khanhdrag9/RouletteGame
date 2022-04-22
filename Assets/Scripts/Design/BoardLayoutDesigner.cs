@@ -19,8 +19,7 @@ namespace Design
 #if UNITY_EDITOR
         string jsonPath => Application.dataPath + $"/Resources/ListBoardData/{gamePlayName}.json";
 
-        [ContextMenu("Generate Json")]
-        void GenerateJson()
+        public void GenerateJson()
         {
             // Create GUI Object data
             var guiObjects = GetComponentsInChildren<GuiDesignObject>(true);
@@ -41,60 +40,28 @@ namespace Design
                 if(image)
                 {
                     colorStr = Extensions.ColorToString(image.color);
-
-                    if(image.sprite)
-                        sprite = AssetConverter.SpriteToString(image.sprite);
+                    sprite = image.sprite ? AssetConverter.SpriteToString(image.sprite) : "";
                 } 
 
                 string visualText = "";
                 if(text) visualText = text.text;
 
                 // Convert GUIObjectType enum to WagerType enum if guiObject is a wager UI
-                string defineName = guiObject.Type.ToString();
-                switch(guiObject.Type)
-                {
-                    // Wager
-                    case GUIObjectType.SingleWager:
-                        defineName = WagerType.Single.ToString();
-                        break;
-                    case GUIObjectType.RangeWager:
-                        defineName = WagerType.Range.ToString();
-                        break;
-                    case GUIObjectType.OddWager:
-                        defineName = WagerType.Odd.ToString();
-                        break;
-                    case GUIObjectType.EvenWager:
-                        defineName = WagerType.Even.ToString();
-                        break;
-                    case GUIObjectType.ColorWager:
-                        defineName = WagerType.Color.ToString();
-                        break;
-
-                    // Spinner
-                    case GUIObjectType.CircleSpinner:
-                        defineName = SpinnerType.SCircle.ToString();
-                        break;
-                }
+                string defineName = GetDefineName(guiObject.Type);
 
                 // Float param
                 float floatParam = 0f;
                 if(guiObject is WagerDesign)
                     floatParam = (guiObject as WagerDesign).BonusRate;
-
-                // Express logic in string
+                
                 string strParam = "";
                 switch(guiObject.Type)
                 {
+                    // Express logic in string
                     case GUIObjectType.SingleWager:
-                        strParam = text.text;
-                        break;
                     case GUIObjectType.RangeWager:
-                        var range = guiObject as RangeWagerGuiDesgin;
-                        strParam = $"{range.From}-{range.To}";
-                        break;
                     case GUIObjectType.ColorWager:
-                        var color = guiObject as ColorWagerGuiDesign;
-                        strParam = $"{Extensions.ColorToString(color.color)}";
+                        strParam = (guiObject as WagerDesign).LogicInStr;
                         break;
                     
                     case GUIObjectType.CircleSpinner:
@@ -161,6 +128,8 @@ namespace Design
             }
 
             Vector2 resolution = GetComponentInChildren<CanvasScaler>().referenceResolution;
+
+            // Final data
             var boardData = new BoardData
             {
                 Name = gamePlayName,
@@ -179,7 +148,38 @@ namespace Design
             Debug.Log("Generate Json OK");
         }
 
-        [ContextMenu("Test Json")]
+        private string GetDefineName(GUIObjectType gUIObjectType)
+        {
+            string defineName = gUIObjectType.ToString();
+            switch(gUIObjectType)
+            {
+                // Wager
+                case GUIObjectType.SingleWager:
+                    defineName = WagerType.Single.ToString();
+                    break;
+                case GUIObjectType.RangeWager:
+                    defineName = WagerType.Range.ToString();
+                    break;
+                case GUIObjectType.OddWager:
+                    defineName = WagerType.Odd.ToString();
+                    break;
+                case GUIObjectType.EvenWager:
+                    defineName = WagerType.Even.ToString();
+                    break;
+                case GUIObjectType.ColorWager:
+                    defineName = WagerType.Color.ToString();
+                    break;
+
+                // Spinner
+                case GUIObjectType.CircleSpinner:
+                    defineName = SpinnerType.SCircle.ToString();
+                    break;
+            }    
+
+            return defineName;      
+        }
+
+        // [ContextMenu("Test Json")]
         void TestJson()
         {
             if(!File.Exists(jsonPath))

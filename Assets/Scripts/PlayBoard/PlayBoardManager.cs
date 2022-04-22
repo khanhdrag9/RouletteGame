@@ -34,8 +34,13 @@ namespace Game
 
         void Start()
         {
-            BoardData[] boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
-            playBoardController.Initialize(boardDatas[0]);
+            if(Global.BoardData == null)
+            {
+                var boardDatas = ServiceLocator.GetService<AssetService>().GetBoardData();
+                Global.BoardData = boardDatas.Length > 0 ? boardDatas[0] : new BoardData();
+            }
+
+            playBoardController.Initialize(Global.BoardData);
             playBoardController.Play();
         }
 

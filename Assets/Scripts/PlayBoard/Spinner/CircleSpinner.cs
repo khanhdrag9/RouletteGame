@@ -107,10 +107,13 @@ namespace Game
             while (currentAngle >= 360) currentAngle -= 360;
             while (currentAngle <= -360) currentAngle += 360;
 
+            Debug.Log("Spin to " + toIndex);
+
             int fullRotation = randomFullRotationTime;
 
             // Get angle when spin clockwise
-            float targetAngle = -(itemNumberAngle + 360f * fullRotation);
+            float half = anglePerItem / 2f - anglePerItem / 20f;
+            float targetAngle = -(itemNumberAngle + 360f * fullRotation) + UnityEngine.Random.Range(-half, half);
 
             // Start handling spin
             IsSpinning = true;

@@ -6,7 +6,7 @@ namespace Game
 
         public string ColorInString {get;}  // Equal to value/format is gotten from Game.Helper.Extensions.ColorToString()
 
-        public ColorWager(int betAmount, float bonusRate, string colorStr) : base(betAmount, bonusRate)
+        public ColorWager(string colorStr) : base()
         {
             this.ColorInString = colorStr;
         }

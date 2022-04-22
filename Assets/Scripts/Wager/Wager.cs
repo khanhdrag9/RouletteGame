@@ -24,17 +24,20 @@ namespace Game
         /// </summary>
         public float BonusRate {get; set;}
 
+        /// <summary>
+        /// Equal StrParam from data design GUIObjectData.StrParam
+        /// </summary>
+        public string RawStrParam {get; set;}
+
         public abstract WagerType WagerType {get;}
 
         protected int reward;
 
         private int betAmnout; 
 
-        protected Wager(int betAmount, float bonusRate)
+        protected Wager()
         {
             Id = System.Guid.NewGuid().ToString("N");
-            this.BetAmount = betAmount;
-            this.BonusRate = bonusRate;
         }
         
         // Handle reward locally

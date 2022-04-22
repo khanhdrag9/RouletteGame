@@ -6,7 +6,7 @@ namespace Game
 
         public int BetNumber {get;}
 
-        public SingleNumberWager(int betAmount, float bonusRate, int betNumber) : base(betAmount, bonusRate)
+        public SingleNumberWager(int betNumber) : base()
         {
             this.BetNumber = betNumber;
         }

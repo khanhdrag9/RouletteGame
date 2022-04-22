@@ -4,7 +4,7 @@ namespace Game
     {
         public override WagerType WagerType => WagerType.Odd;
 
-        public OddNumberWager(int betAmount, float bonusRate) : base(betAmount, bonusRate)
+        public OddNumberWager() : base()
         {
         }
 

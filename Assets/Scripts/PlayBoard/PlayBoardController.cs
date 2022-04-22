@@ -134,7 +134,7 @@ namespace Game
                         wager = GetSingleWager(betNumber);
                         if(wager == null)
                         {
-                            wager = new SingleNumberWager(0, bonusRate, betNumber);
+                            wager = new SingleNumberWager(betNumber);
                             wagers.Add(wager);
                         }
 
@@ -149,7 +149,7 @@ namespace Game
                         wager = GetRangeWager(from, to);
                         if(wager == null)
                         {
-                            wager = new RangeWager(0, bonusRate, from, to);
+                            wager = new RangeWager(from, to);
                             wagers.Add(wager);
                         }
 
@@ -160,7 +160,7 @@ namespace Game
                         wager = GetOddWager();
                         if(wager == null)
                         {
-                            wager = new OddNumberWager(0, bonusRate);
+                            wager = new OddNumberWager();
                             wagers.Add(wager);
                         }
 
@@ -171,7 +171,7 @@ namespace Game
                         wager = GetEvenWager();
                         if(wager == null)
                         {
-                            wager = new EvenNumberWager(0, bonusRate);
+                            wager = new EvenNumberWager();
                             wagers.Add(wager);
                         }
 
@@ -184,16 +184,17 @@ namespace Game
                         wager = GetColorWager(colorStr);
                         if(wager == null)
                         {
-                            wager = new ColorWager(0, bonusRate, colorStr);
+                            wager = new ColorWager(colorStr);
                             wagers.Add(wager);
                         }
 
                         break;
                 }
-
+                
                 bool isAddCurrency = eventData.button == PointerEventData.InputButton.Left;
                 bool isWithdrawCurrency = eventData.button == PointerEventData.InputButton.Right;
 
+                wager.RawStrParam = data.StrParam;
                 if(isAddCurrency) AddCurrencyToWager(wager, guiObject);
                 if(isWithdrawCurrency) WithdrawCurrencyFromWager(wager, guiObject);
             });

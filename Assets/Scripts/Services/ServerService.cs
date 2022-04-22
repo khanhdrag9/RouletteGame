@@ -48,6 +48,7 @@ namespace Game
                 requestData.wagers[i] = new WagerData
                 {
                     WagerType = wagers[i].WagerType.ToString(),
+                    StrParam = wagers[i].RawStrParam,
                     BetAmount = wagers[i].BetAmount
                 };
             }

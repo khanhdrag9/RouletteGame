@@ -37,15 +37,18 @@ public class ServerMockup
             // Request place wager and get result
             if(api == "wheel/result")
             {   
-                var singleWagers = Global.BoardData.Boxes.Where(b => b.Name == WagerType.Single.ToString()).ToArray();
-                int randomIndex = Random.Range(0, singleWagers.ToArray().Length);
-                var resultItem = singleWagers[randomIndex];
+                string strParam = "";
 
-                resultItem.StrParam = "1";
+                // This is result that is created randomly
+                var singleWagers = Global.BoardData.Boxes.Where(b => b.Name == WagerType.Single.ToString()).ToArray();
+                int randomIndex = Random.Range(0, singleWagers.Length);
+                strParam = singleWagers[randomIndex].StrParam;
+                // If want to control result, set strParam to number you expect
+                strParam = "10";    // result is 10, 10 is NUMBER that player bet in, even the icons also are assigned to 1 number  
 
                 var responseObject = new WagerResponse
                 {
-                    Result = int.Parse(resultItem.StrParam),    // Because it is Single Wager so it always be number
+                    Result = int.Parse(strParam),    // Because it is Single Wager so it always be number
                     RewardAmount = 0
                 };
                 var requestObj = JsonUtility.FromJson<WagerRequestData>(data);
@@ -55,32 +58,32 @@ public class ServerMockup
                     bool isReward = false;
                     if (wager.WagerType == WagerType.Range.ToString())
                     {
-                        int intResult = int.Parse(resultItem.StrParam);
-                        var p = wager.StrParam.Split(',');
+                        int intResult = int.Parse(strParam);
+                        var p = wager.StrParam.Split('-');
                         int from = int.Parse(p[0]);
                         int to = int.Parse(p[1]);
                         isReward = from <= intResult && intResult <= to;
                     }
                     else if (wager.WagerType == WagerType.Odd.ToString())
                     {
-                        int intResult = int.Parse(resultItem.StrParam);
+                        int intResult = int.Parse(strParam);
                         isReward = intResult % 2 == 1;
                     }
                     else if (wager.WagerType == WagerType.Even.ToString())
                     {
-                        int intResult = int.Parse(resultItem.StrParam);
+                        int intResult = int.Parse(strParam);
                         isReward = intResult % 2 == 0;
                     }
                     else if (wager.WagerType == WagerType.Color.ToString())
                     {
-                        isReward = resultItem.StrParam == wager.StrParam;
+                        isReward = strParam == wager.StrParam;
                     }
                     // else if(wager.WagerType == WagerType.Single.ToString())
                     else
                     {
                         try
                         {
-                            isReward = int.Parse(wager.StrParam) == int.Parse(resultItem.StrParam);
+                            isReward = int.Parse(wager.StrParam) == int.Parse(strParam);
                         }
                         catch
                         {

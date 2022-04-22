@@ -21,7 +21,6 @@ namespace Game.MainMenu
                 btn.onClick.AddListener(()=>
                 {   
                     Global.BoardData = data;
-                    SceneLoader.GoPlay();
                 });
             }
         }

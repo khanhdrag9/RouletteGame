@@ -1,15 +1,16 @@
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Helper
 {
-    public static class SceneLoader
+    public class SceneLoader : MonoBehaviour
     {
-        public static void GoMainMenu()
+        public void GoMainMenu()
         {
             SceneManager.LoadScene(0);
         }
 
-        public static void GoPlay()
+        public void GoPlay()
         {
             SceneManager.LoadScene(1);
         }

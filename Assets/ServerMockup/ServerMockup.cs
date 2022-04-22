@@ -37,10 +37,10 @@ public class ServerMockup
             // Request place wager and get result
             if(api == "wheel/result")
             {   
+                var singleWagers = Global.BoardData.Boxes.Where(b => b.Name == WagerType.Single.ToString()).ToArray();
                 string strParam = "";
 
                 // This is result that is created randomly
-                var singleWagers = Global.BoardData.Boxes.Where(b => b.Name == WagerType.Single.ToString()).ToArray();
                 int randomIndex = Random.Range(0, singleWagers.Length);
                 strParam = singleWagers[randomIndex].StrParam;
                 // If want to control result, set strParam to number you expect
@@ -76,7 +76,8 @@ public class ServerMockup
                     }
                     else if (wager.WagerType == WagerType.Color.ToString())
                     {
-                        isReward = strParam == wager.StrParam;
+                        string colorOfResult = singleWagers.First(e => e.StrParam == strParam).Color;
+                        isReward = colorOfResult == wager.StrParam;
                     }
                     // else if(wager.WagerType == WagerType.Single.ToString())
                     else

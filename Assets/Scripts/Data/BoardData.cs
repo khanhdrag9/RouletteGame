@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Asset
+namespace Game.Data
 {
     [System.Serializable]
     public class ListBoardData

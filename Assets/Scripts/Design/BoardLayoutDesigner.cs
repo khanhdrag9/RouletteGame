@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Game.Helper;
-using Game.Asset;
+using Game.Data;
 
 namespace Design
 {

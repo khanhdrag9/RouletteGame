@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
-using Game.Asset;
+using Game.Data;
 using UnityEngine;
 using UnityEngine.Networking;
 

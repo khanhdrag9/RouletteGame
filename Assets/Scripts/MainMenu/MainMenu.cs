@@ -2,7 +2,7 @@ using Game.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using Game.Asset;
+using Game.Data;
 
 namespace Game.MainMenu
 {

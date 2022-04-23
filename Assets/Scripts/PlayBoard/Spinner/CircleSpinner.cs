@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Game.Asset;
+using Game.Data;
 using Game.Helper;
 
 namespace Game

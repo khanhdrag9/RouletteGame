@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Game.Asset;
+using Game.Data;
 using Game.Helper;
 using UnityEngine;
 using UnityEngine.EventSystems;

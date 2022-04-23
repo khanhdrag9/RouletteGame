@@ -1,4 +1,4 @@
-using Game.Asset;
+using Game.Data;
 using UnityEngine;
 
 namespace Game

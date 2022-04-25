@@ -9,5 +9,6 @@ namespace Game
         bool IsSpinning {get;}
         void Initialize(SpinnerConfig config);
         void Spin(int expectResult);
+        void Spin();
     }
 }

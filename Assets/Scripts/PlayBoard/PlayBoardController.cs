@@ -418,6 +418,9 @@ namespace Game
 
             private IEnumerator HandleSpin()
             {
+                // UI spin
+                controller.spinner.Spin();
+
                 // Send request to server
                 var request = new WagerRequest(controller.wagers.ToArray());
                 controller.wagers.Clear();

@@ -253,8 +253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spinnerItemGroup: {fileID: 8492641081552411983}
   spinnerItemPrefab: {fileID: 4099079064361651691, guid: 4550baf4db1af3c40b4ffe57d9834b59, type: 3}
-  pointer: {fileID: 2426273044326231723}
   minRotationTime: 5
   maxRotationTime: 7
   minSpinDuration: 5
   maxSpinDuration: 7
+  defaultSpinSpeed: 7

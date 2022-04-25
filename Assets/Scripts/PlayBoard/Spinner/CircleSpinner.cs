@@ -14,6 +14,12 @@ namespace Game
     /// </summary>
     public class CircleSpinner : MonoBehaviour, ISpinner
     {
+        public enum Direction
+        {
+            Clockwise, Anticlockwise
+        } 
+
+
         [Header("UI creation")]
         [SerializeField] private RectTransform spinnerItemGroup;
         [SerializeField] private GameObject spinnerItemPrefab;
@@ -23,10 +29,26 @@ namespace Game
         [SerializeField][Tooltip("Maximum full rotations")] private int maxRotationTime = 7;
         [SerializeField][Tooltip("Minimum spin duration")] private float minSpinDuration  = 5f;
         [SerializeField][Tooltip("Maximum spin duration")] private float maxSpinDuration  = 7f;
+        [SerializeField][Tooltip("Defailt spin speed")] private Direction spinDirection;
+    
 
         private SpinnerConfig config;
-        private int randomFullRotationTime => UnityEngine.Random.Range(minRotationTime, maxRotationTime + 1);
-        private float randomSpinDuration => UnityEngine.Random.Range(minSpinDuration, maxSpinDuration);
+        private int randomFullRotationTime
+        {
+            get
+            {
+                currentFullRotationTime = UnityEngine.Random.Range(minRotationTime, maxRotationTime + 1);
+                return currentFullRotationTime;
+            }
+        }
+        private float randomSpinDuration
+        {
+            get
+            {
+                currentSpinDuration = UnityEngine.Random.Range(minSpinDuration, maxSpinDuration);
+                return currentSpinDuration;
+            }
+        }
         private int numberItem;
         private float anglePerItem;
         private float angle
@@ -34,7 +56,11 @@ namespace Game
             get => spinnerItemGroup.eulerAngles.z;
             set => spinnerItemGroup.eulerAngles = new Vector3(0f, 0f, value);
         }
-
+        private float passedTime;
+        private Coroutine spinCoroutine;
+        private int currentFullRotationTime;
+        private float currentSpinDuration;
+        private int spinDirectionInt => spinDirection == Direction.Clockwise ? -1 : 1;
 
         public GameObject GameObject => gameObject;
         public bool IsSpinning {get; private set;}
@@ -84,6 +110,17 @@ namespace Game
             this.config = config;
         }
 
+        public void Spin()
+        {
+            passedTime = 0;
+
+            // Spin without a specify target, calculate the speed to spin
+            // Should mul by 1.5f to make transition between spin without target and with a target is more smooth.
+            float anglePerSecond = (randomFullRotationTime * 360f / randomSpinDuration) * 1.5f;
+            if(spinCoroutine != null) StopCoroutine(spinCoroutine);
+            spinCoroutine = StartCoroutine(SpinWithSpeed(anglePerSecond));
+        }
+
         /// <summary>
         /// Start spinning
         /// <param name="expectResult"></param>
@@ -94,7 +131,8 @@ namespace Game
             int indexOfExpectResult = Array.FindIndex(config.Items, e => e.Number == expectResult);
 
             // Start Spin here
-            StartCoroutine(HandleSpin(indexOfExpectResult));
+            if(spinCoroutine != null) StopCoroutine(spinCoroutine);
+            spinCoroutine = StartCoroutine(HandleSpin(indexOfExpectResult));
         }
 
         private IEnumerator HandleSpin(int toIndex)
@@ -102,39 +140,68 @@ namespace Game
             float itemNumberAngle = 360f - toIndex * anglePerItem;
             
             // Get current angle in [0-360]
-            float currentAngle = angle;
-            while (currentAngle >= 360) currentAngle -= 360;
-            while (currentAngle <= -360) currentAngle += 360;
+            float currentAngle = ValidateAngle(angle);
 
             Debug.Log("Spin to index " + toIndex);
 
-            int fullRotation = randomFullRotationTime;
+            int fullRotation = currentFullRotationTime;
 
             // Get angle when spin clockwise, anglePerItem / 20f is padding amount
             float half = anglePerItem / 2f - anglePerItem / 20f;
-            float targetAngle = -(itemNumberAngle + 360f * fullRotation) + UnityEngine.Random.Range(-half, half);
+            float targetAngle = spinDirectionInt * (itemNumberAngle + 360f * fullRotation) + UnityEngine.Random.Range(-half, half);
 
             // Start handling spin
             IsSpinning = true;
-            float passedTime = 0f;
-            float spinDuration = randomSpinDuration;
+            // float passedTime = 0f;
+            float spinDuration = currentSpinDuration + passedTime;
 
-            while(passedTime < spinDuration)
-            {
-                float lerpFactor = Mathf.SmoothStep(0, 1, (Mathf.SmoothStep(0, 1, passedTime / spinDuration)));
-                angle = Mathf.Lerp(currentAngle, targetAngle, lerpFactor);
-                passedTime += Time.deltaTime;
-
-                yield return null;
-            }
+            yield return StartSpin(spinDuration, currentAngle, targetAngle);
 
             angle = targetAngle;
             IsSpinning = false;
         }
 
+        private IEnumerator StartSpin(float duration, float from, float to)
+        {
+            while(passedTime < duration)
+            {
+                // Smooth Step make slow to fast to slow
+                float lerpFactor = Mathf.SmoothStep(0, 1, (Mathf.SmoothStep(0, 1f, passedTime / duration)));
+                float newAngle = Mathf.Lerp(from, to, lerpFactor);
+                
+                angle = newAngle;
+                passedTime += Time.deltaTime;
+
+                yield return null;
+            }
+        }
+
+        private IEnumerator SpinWithSpeed(float maxSpeed, float timeToMaxSpeed = 2f)   // maxSpeed is angle per second
+        {
+            while(true)
+            {
+                float speed = Mathf.Lerp(0, maxSpeed, Mathf.Clamp01(passedTime / timeToMaxSpeed));
+                angle += spinDirectionInt * speed * Time.deltaTime;
+
+                passedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        private float ValidateAngle(float value)
+        {
+            while (value >= 360) value -= 360;
+            while (value <= -360) value += 360;
+            return value;
+        }
+
         private void OnEnable()
         {
+            if(spinCoroutine != null) StopCoroutine(spinCoroutine); 
             angle = 0;
+            passedTime = 0;
         }
+
+        
     }
 }

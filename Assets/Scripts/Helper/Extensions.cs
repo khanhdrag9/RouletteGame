@@ -45,6 +45,21 @@ namespace Game.Helper
 
             return result; 
         }
+
+        /// http://gizma.com/easing/
+        public static float EaseInCubic(float time, float start, float end, float duration)
+        {
+            time /= duration;
+            return (end - start) * time * time * time + start;
+        }
+
+        /// http://gizma.com/easing/
+        public static float EaseOutCubic(float time, float start, float end, float duration)
+        {
+            time /= duration;
+            time--;
+            return (end - start)*(time*time*time + 1) + start;
+        }
     }
 
     public static class AssetConverter
